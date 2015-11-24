@@ -141,16 +141,38 @@ void DS::GetAllPokemonsByLevel(int trainerID, int **pokemons, int* numOfPokemon)
 	//return success
 }
 void DS::EvolvePokemon(int pokemonID, int evolvedID){
-	// if either id <=0 return invalid input
+	// if either id <=0 throw invalid input
+	if (pokemonID <= 0 || evolvedID <= 0){
+		throw InvalidInput();
+	}
 
-	//get pokemon with pokemon id and evolved id, if pid not exist or eveloved id does exist 
-	// return failure
+	//get pokemon with pokemon id, if not exist will throw failure
 
-	// remove pokemon from all 3 trees,
-	// change its id
-	// add it to all 3 trees
+	pokemon& myPokemon = p_AVL.find(pokemonID);
 
-	//return sucess
+	//get its level and trainer id,
+	int trainerID = myPokemon.trainer_ID;
+	int level = myPokemon.level;
+
+	try{// if evolved does not exist, then continue evolution in catch
+		p_AVL.find(evolvedID);
+	}
+	catch (p_AVL.dataDoesNotExist&){
+		// remove pokemon from all 3 trees,
+		//catch new pokemon
+
+		FreePokemon(pokemonID);
+		CatchPokemon(evolvedID, trainerID, level);
+
+		//return sucessfully
+		return;
+
+	}
+	catch (...){
+		assert(0);
+	}
+	// if evolved exists then we get here and throw failure
+	
 
 }
 
