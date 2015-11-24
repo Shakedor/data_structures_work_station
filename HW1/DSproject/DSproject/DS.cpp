@@ -110,11 +110,29 @@ StatusType DS::EvolvePokemon(int pokemonID, int evolvedID){
 	// change its id
 	// add it to all 3 trees
 
+	//return sucess
+
 }
 
 
 
-StatusType DS::UpdateLevels(void *DS, int stoneCode, int stoneFactor){}
+StatusType DS::UpdateLevels(void *DS, int stoneCode, int stoneFactor){
+	//if code or factor <1 return invalid input
+	// make an array of trainers
+	//for each trainer, preform 2 conditional walks of pokemons according to is stonde code function
+	// destroying the tree after wards
+	// so 4 arrays of total size 2n_trainer for each trainer
+	// each 2 walks (for condition true and false) reconstruct to an avl tree
+
+	// make the same conditional walks for the p_MAVL
+	// for every poemon in true condition, multiply its level by stone factor.
+	//then build back the p_mavl true and false conditions trees.
+
+	// now for each false and true tree pair, merge the trees
+	// and allocate them back to their place.
+
+
+}
 
 //*************************
 
