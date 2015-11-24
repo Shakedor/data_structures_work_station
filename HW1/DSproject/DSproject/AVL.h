@@ -97,17 +97,23 @@ class AvlTree {
 public:
 
 	AvlTree(const Compare& Cmp) : root(NULL), max_node(NULL), cmp(Cmp), treeSize(0){}
+	AvlTree(const AvlTree& a, const AvlTree& b); // O(max(a.treeSize, b.treeSize))
+	template<class Condition> AvlTree(const AvlTree&, Condition); // O(treeSize))
+
 	~AvlTree(){
 		destroyTree(root);
 	}
 
+	//May throw exceptions.
 	void insert(const Key& key, const Data& data);
 	void remove(const Key& key);
 	Data& find(const Key& key);
+	Data& get_max();
 
-	template<class Operation> void preorder(Operation);
-	template<class Operation> void inorder(Operation);
-	template<class Operation> void postorder(Operation);
+	// Calls op(data) for every object.
+	template<class Operation> void preorder(Operation op);
+	template<class Operation> void inorder(Operation op);
+	template<class Operation> void postorder(Operation op);
 
 	class avlException{};
 	class dataAlreadyExists : public avlException {};
@@ -261,6 +267,16 @@ Data& AvlTree<Key, Data, Compare> :: find(const Key& key){
 	}
 	throw dataDoesNotExist();
 }
+
+template<class Key, class Data, class Compare>
+Data& AvlTree<Key, Data, Compare> :: get_max(){
+	if (max_node){
+		return max_node->data;
+	}
+	assert(treeSize == 0 && !root);
+	throw avlIsEmpty();
+}
+
 
 
 //////////////////////////////////////////////
