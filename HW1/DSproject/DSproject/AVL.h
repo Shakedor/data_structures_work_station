@@ -18,34 +18,35 @@ const T& abs(const T& a){
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////			AvlNode			////////////////////////////
 
-template<class Data>
+template<class Key, class Data>
 class AvlNode {
 	enum Side {
 		left_side,
 		right_side
 	};
 
-	AvlNode<Data>* rotate_side(Side);
-	void set_son(AvlNode<Data>* son, Side);
+	AvlNode* rotate_side(Side);
+	void set_son(AvlNode* son, Side);
 
 public:
+	Key key;
 	Data data;
-	AvlNode<Data>* left;
-	AvlNode<Data>* right;
-	AvlNode<Data>* parent;
+	AvlNode* left;
+	AvlNode* right;
+	AvlNode* parent;
 	int height;
 	int bf;
 
-	explicit AvlNode(const Data& data, AvlNode<Data>* parent = NULL) : data(data),
-			left(NULL), right(NULL), parent(parent), height(0), bf(0) {}
+	AvlNode(const Key& key, const Data& data, AvlNode* parent = NULL) : key(key),
+			data(data), left(NULL), right(NULL), parent(parent), height(0), bf(0) {}
 	~AvlNode() = default;
 
 	void updateNodeInfo();
-	void set_right(AvlNode<Data>*);
-	void set_left(AvlNode<Data>*);
+	void set_right(AvlNode*);
+	void set_left(AvlNode*);
 
-	AvlNode<Data>* rotate_left();
-	AvlNode<Data>* rotate_right();
+	AvlNode* rotate_left();
+	AvlNode* rotate_right();
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -61,44 +62,48 @@ public:
  *
  * 	<Data> and <Compare> must have copy constructors.
  */
-template<class Data,class Compare>
+template<class Key, class Data, class Compare>
 class AvlTree {
 
-	AvlNode<Data>* root;
+	AvlNode<Key, Data>* root;
+	AvlNode<Key, Data>* max_node;
 	Compare cmp;
 	int treeSize;
 
-	void destroyTree(AvlNode<Data>*);
+	void destroyTree(AvlNode<Key, Data>*);
 
-	AvlNode<Data>* doInsert(const Data& data);
-	AvlNode<Data>* doRemove(const Data& data);
-	void fixPath(AvlNode<Data>* v);
+	void updateMaxNode();
 
-	AvlNode<Data>* find(const Data& data);
-	AvlNode<Data>** findPtrInParent(AvlNode<Data>*);
+	AvlNode<Key, Data>* doInsert(const Key& key, const Data& data);
+	AvlNode<Key, Data>* doRemove(const Key& key);
+	void fixPath(AvlNode<Key, Data>* v);
 
-	AvlNode<Data>* roll(AvlNode<Data>* v);
-	AvlNode<Data>* roll_LL(AvlNode<Data>* v);
-	AvlNode<Data>* roll_LR(AvlNode<Data>* v);
-	AvlNode<Data>* roll_RR(AvlNode<Data>* v);
-	AvlNode<Data>* roll_RL(AvlNode<Data>* v);
+	AvlNode<Key, Data>* do_find(const Key& key);
+	AvlNode<Key, Data>** findPtrInParent(AvlNode<Key, Data>*);
+
+	AvlNode<Key, Data>* roll(AvlNode<Key, Data>* v);
+	AvlNode<Key, Data>* roll_LL(AvlNode<Key, Data>* v);
+	AvlNode<Key, Data>* roll_LR(AvlNode<Key, Data>* v);
+	AvlNode<Key, Data>* roll_RR(AvlNode<Key, Data>* v);
+	AvlNode<Key, Data>* roll_RL(AvlNode<Key, Data>* v);
 
 	enum Order{
 		preOrder,
 		inOrder,
 		postOrder
 	};
-	template<class Operation> void orderRecursion(AvlNode<Data>*, Operation, Order);
+	template<class Operation> void orderRecursion(AvlNode<Key, Data>*, Operation, Order);
 
 public:
 
-	AvlTree(const Compare& Cmp) : root(NULL), cmp(Cmp), treeSize(0){}
+	AvlTree(const Compare& Cmp) : root(NULL), max_node(NULL), cmp(Cmp), treeSize(0){}
 	~AvlTree(){
 		destroyTree(root);
 	}
 
-	void insert(const Data& data);
-	void remove(const Data& data);
+	void insert(const Key& key, const Data& data);
+	void remove(const Key& key);
+	Data& find(const Key& key);
 
 	template<class Operation> void preorder(Operation);
 	template<class Operation> void inorder(Operation);
@@ -116,16 +121,16 @@ public:
 //////																	////////
 ////////////////////////////////////////////////////////////////////////////////
 
-template<class Data>
-void AvlNode<Data> :: updateNodeInfo(){
+template<class Key, class Data>
+void AvlNode<Key, Data> :: updateNodeInfo(){
 	int hLeft = left ? left->height : -1;
 	int hRight = right ? right->height : -1;
 	height = max(hLeft, hRight) + 1;
 	bf = hLeft - hRight;
 }
 
-template<class Data>
-void AvlNode<Data> :: set_son(AvlNode<Data>* son, Side side){
+template<class Key, class Data>
+void AvlNode<Key, Data> :: set_son(AvlNode<Key, Data>* son, Side side){
 	(side == Side::left_side) ? left = son : right = son;
 	if (son){
 		son->parent = this;
@@ -133,19 +138,19 @@ void AvlNode<Data> :: set_son(AvlNode<Data>* son, Side side){
 	updateNodeInfo();
 }
 
-template<class Data>
-void AvlNode<Data> :: set_right(AvlNode<Data>* v){
+template<class Key, class Data>
+void AvlNode<Key, Data> :: set_right(AvlNode<Key, Data>* v){
 	set_son(v, Side::right_side);
 }
 
-template<class Data>
-void AvlNode<Data> :: set_left(AvlNode<Data>* v){
+template<class Key, class Data>
+void AvlNode<Key, Data> :: set_left(AvlNode<Key, Data>* v){
 	set_son(v, Side::left_side);
 }
 
-template<class Data>
-AvlNode<Data>* AvlNode<Data> :: rotate_side(Side side){
-	AvlNode<Data>* newRoot = (side == Side::right_side) ? left : right;
+template<class Key, class Data>
+AvlNode<Key, Data>* AvlNode<Key, Data> :: rotate_side(Side side){
+	AvlNode<Key, Data>* newRoot = (side == Side::right_side) ? left : right;
 
 	if (parent && parent->left == this){
 		parent->set_left(newRoot);
@@ -168,13 +173,13 @@ AvlNode<Data>* AvlNode<Data> :: rotate_side(Side side){
 	return newRoot;
 }
 
-template<class Data>
-AvlNode<Data>* AvlNode<Data> :: rotate_right(){
+template<class Key, class Data>
+AvlNode<Key, Data>* AvlNode<Key, Data> :: rotate_right(){
 	return rotate_side(Side::right_side);
 }
 
-template<class Data>
-AvlNode<Data>* AvlNode<Data> :: rotate_left(){
+template<class Key, class Data>
+AvlNode<Key, Data>* AvlNode<Key, Data> :: rotate_left(){
 	return rotate_side(Side::left_side);
 }
 
@@ -189,8 +194,8 @@ AvlNode<Data>* AvlNode<Data> :: rotate_left(){
 //////	AvlTree destroy method	//////
 //////////////////////////////////////
 
-template<class Data,class Compare>
-void AvlTree<Data, Compare> :: destroyTree(AvlNode<Data>* v){
+template<class Key, class Data, class Compare>
+void AvlTree<Key, Data, Compare> :: destroyTree(AvlNode<Key, Data>* v){
 	if (!v){
 		return;
 	}
@@ -206,15 +211,15 @@ void AvlTree<Data, Compare> :: destroyTree(AvlNode<Data>* v){
 
 //If data is found - returns a pointer to its node.
 //If data isn't found - returns a pointer to its 'wanna-be' parent
-template<class Data,class Compare>
-AvlNode<Data>* AvlTree<Data, Compare> :: find(const Data& data){
+template<class Key, class Data, class Compare>
+AvlNode<Key, Data>* AvlTree<Key, Data, Compare> :: do_find(const Key& key){
 	assert(root);
-	AvlNode<Data>* current = root;
-	AvlNode<Data>* next = NULL; //Pointer to left\right field (which is also a pointer) of current
+	AvlNode<Key, Data>* current = root;
+	AvlNode<Key, Data>* next = NULL; //Pointer to left\right field (which is also a pointer) of current
 	bool found = false;
 
 	while (!found) {
-		switch (cmp(data, current->data)){
+		switch (cmp(key, current->key)){
 		case 0:
 			found = true;
 			break;
@@ -238,33 +243,61 @@ AvlNode<Data>* AvlTree<Data, Compare> :: find(const Data& data){
 }
 
 //Finds the pointer to v in the parent of v.
-template<class Data, class Compare>
-AvlNode<Data>** AvlTree<Data, Compare> :: findPtrInParent(AvlNode<Data>* v){
+template<class Key, class Data, class Compare>
+AvlNode<Key, Data>** AvlTree<Key, Data, Compare> :: findPtrInParent(AvlNode<Key, Data>* v){
 	assert(v);
 	if (!v->parent){
 		return &root;
 	}
-	AvlNode<Data>* p = v->parent;
+	AvlNode<Key, Data>* p = v->parent;
 	return (p->left == v) ? &(p->left) : &(p->right);
 }
+
+template<class Key, class Data, class Compare>
+Data& AvlTree<Key, Data, Compare> :: find(const Key& key){
+	AvlNode<Key, Data>* v = do_find(key);
+	if (cmp(key, v->key) == 0){
+		return v->data;
+	}
+	throw dataDoesNotExist();
+}
+
+
+//////////////////////////////////////////////
+//////	AvlTree updateMaxNode method	//////
+//////////////////////////////////////////////
+
+// Updates the max node. Operates at O(log(treeSize)).
+template<class Key, class Data, class Compare>
+void AvlTree<Key, Data, Compare> :: updateMaxNode(){
+	AvlNode<Key, Data>* v = root;
+	AvlNode<Key, Data>* max = NULL;
+
+	while(v){
+		max = v;
+		v = v->left;
+	}
+	return max;
+}
+
 
 //////////////////////////////////////////////
 //////	AvlTree insert/remove methods	//////
 //////////////////////////////////////////////
 
-template<class Data,class Compare>
-AvlNode<Data>* AvlTree<Data, Compare> :: doInsert(const Data& data){
-	AvlNode<Data>* v = find(data);
+template<class Key, class Data, class Compare>
+AvlNode<Key, Data>* AvlTree<Key, Data, Compare> :: doInsert(const Key& key, const Data& data){
+	AvlNode<Key, Data>* v = do_find(data);
 
-	switch (cmp(v->data, data)){
+	switch (cmp(v->key, key)){
 	case 0:
 		throw dataAlreadyExists();
 		break;
 	case 1:
-		v->left = new AvlNode<Data>(data, v);
+		v->left = new AvlNode<Key, Data>(key, data, v);
 		break;
 	case -1:
-		v->right = new AvlNode<Data>(data, v);
+		v->right = new AvlNode<Key, Data>(key, data, v);
 		break;
 	default:
 		assert(0); //Shouldn't get here
@@ -273,29 +306,30 @@ AvlNode<Data>* AvlTree<Data, Compare> :: doInsert(const Data& data){
 	return v; //Address of parent
 }
 
-template<class Data,class Compare>
-void AvlTree<Data, Compare> :: insert(const Data& data){
+template<class Key, class Data, class Compare>
+void AvlTree<Key, Data, Compare> :: insert(const Key& key, const Data& data){
 	if (!root){
-		root = new AvlNode<Data>(data);
+		root = new AvlNode<Key, Data>(key, data);
 	} else {
-		fixPath (doInsert(data));
+		fixPath (doInsert(key, data));
 	}
 	++treeSize;
+	updateMaxNode();
 }
 
-template<class Data,class Compare>
-AvlNode<Data>* AvlTree<Data, Compare> :: doRemove(const Data& data){
-	AvlNode<Data>* v = find(data);
-	if (cmp(v->data, data) != 0){
+template<class Key, class Data, class Compare>
+AvlNode<Key, Data>* AvlTree<Key, Data, Compare> :: doRemove(const Key& key){
+	AvlNode<Key, Data>* v = do_find(key);
+	if (cmp(v->key, key) != 0){
 		throw dataDoesNotExist();
 	}
 
-	AvlNode<Data>** vPtr = findPtrInParent(v); 	//pointer to v in the parent of v.
-	AvlNode<Data>* returnVal = NULL; //This will be updated to deepest changed node
+	AvlNode<Key, Data>** vPtr = findPtrInParent(v); 	//pointer to v in the parent of v.
+	AvlNode<Key, Data>* returnVal = NULL; //This will be updated to deepest changed node
 
 	if (v->left){
 		//Finds biggest in the left sub tree.
-		AvlNode<Data>* vNew = v->left;
+		AvlNode<Key, Data>* vNew = v->left;
 		while(vNew->right) {
 			vNew = vNew->right;
 		}
@@ -319,14 +353,15 @@ AvlNode<Data>* AvlTree<Data, Compare> :: doRemove(const Data& data){
 	return returnVal;
 }
 
-template<class Data,class Compare>
-void AvlTree<Data, Compare> :: remove(const Data& data){
+template<class Key, class Data, class Compare>
+void AvlTree<Key, Data, Compare> :: remove(const Key& key){
 	if (!root){
 		throw avlIsEmpty();
 	} else {
-		fixPath (doRemove(data));
+		fixPath (doRemove(key));
 	}
 	--treeSize;
+	updateMaxNode();
 }
 
 // insert/remove actions may have unwanted side effects on the insert/remove path:
@@ -335,14 +370,14 @@ void AvlTree<Data, Compare> :: remove(const Data& data){
 // This method passes on the insert/remove path (upwards) and:
 //		- Updates height and bf of every node.
 //		- For any node that has |BF| = 2, it fixes it by rolling the node. (See "roll")
-template<class Data,class Compare>
-void AvlTree<Data, Compare> :: fixPath(AvlNode<Data>* v){
+template<class Key, class Data, class Compare>
+void AvlTree<Key, Data, Compare> :: fixPath(AvlNode<Key, Data>* v){
 	//This algorithm is based on lecture 4, page 25
 	while(v){
 		v->updateNodeInfo();
 
 		if (abs(v->bf) == 2){
-			AvlNode<Data>** vPtr = findPtrInParent(v);
+			AvlNode<Key, Data>** vPtr = findPtrInParent(v);
 			*vPtr = roll(v);
 		}
 		v = v->parent; // |bf| <= 1. Continue upwards.
@@ -353,8 +388,8 @@ void AvlTree<Data, Compare> :: fixPath(AvlNode<Data>* v){
 //////	AvlTree roll methods	//////
 //////////////////////////////////////
 
-template<class Data,class Compare>
-AvlNode<Data>* AvlTree<Data, Compare> :: roll(AvlNode<Data>* v){
+template<class Key, class Data, class Compare>
+AvlNode<Key, Data>* AvlTree<Key, Data, Compare> :: roll(AvlNode<Key, Data>* v){
 	int bf = v->bf;
 	int leftBF = v->left ? v->left->bf : 0;
 	int rightBF = v->right ? v->right->bf : 0;
@@ -372,24 +407,24 @@ AvlNode<Data>* AvlTree<Data, Compare> :: roll(AvlNode<Data>* v){
 	}
 }
 
-template<class Data,class Compare>
-AvlNode<Data>* AvlTree<Data, Compare> :: roll_LL(AvlNode<Data>* v){
+template<class Key, class Data, class Compare>
+AvlNode<Key, Data>* AvlTree<Key, Data, Compare> :: roll_LL(AvlNode<Key, Data>* v){
 	return v->rotate_right(); //New root of sub tree
 }
 
-template<class Data,class Compare>
-AvlNode<Data>* AvlTree<Data, Compare> :: roll_LR(AvlNode<Data>* v){
+template<class Key, class Data, class Compare>
+AvlNode<Key, Data>* AvlTree<Key, Data, Compare> :: roll_LR(AvlNode<Key, Data>* v){
 	v->set_left(v->left->rotate_left());
 	return v->rotate_right(); //New root of sub tree
 }
 
-template<class Data,class Compare>
-AvlNode<Data>* AvlTree<Data, Compare> :: roll_RR(AvlNode<Data>* v){
+template<class Key, class Data, class Compare>
+AvlNode<Key, Data>* AvlTree<Key, Data, Compare> :: roll_RR(AvlNode<Key, Data>* v){
 	return v->rotate_left(); //New root of sub tree
 }
 
-template<class Data,class Compare>
-AvlNode<Data>* AvlTree<Data, Compare> :: roll_RL(AvlNode<Data>* v){
+template<class Key, class Data, class Compare>
+AvlNode<Key, Data>* AvlTree<Key, Data, Compare> :: roll_RL(AvlNode<Key, Data>* v){
 	v->set_right(v->right->rotate_right());
 	return v->rotate_left(); //New root of sub tree
 }
@@ -398,9 +433,9 @@ AvlNode<Data>* AvlTree<Data, Compare> :: roll_RL(AvlNode<Data>* v){
 //////	AvlTree iterating methods	//////
 //////////////////////////////////////////
 
-template<class Data,class Compare>
+template<class Key, class Data, class Compare>
 template<class Operation>
-void AvlTree<Data, Compare> :: orderRecursion(AvlNode<Data>* v, Operation op, Order order){
+void AvlTree<Key, Data, Compare> :: orderRecursion(AvlNode<Key, Data>* v, Operation op, Order order){
 	if (!v){
 		return;
 	}
@@ -411,21 +446,21 @@ void AvlTree<Data, Compare> :: orderRecursion(AvlNode<Data>* v, Operation op, Or
 	if (order == Order::postOrder) {op(v->data);}
 }
 
-template<class Data,class Compare>
+template<class Key, class Data, class Compare>
 template<class Operation>
-void AvlTree<Data, Compare> :: preorder(Operation op){
+void AvlTree<Key, Data, Compare> :: preorder(Operation op){
 	orderRecursion(root, op, Order::preOrder);
 }
 
-template<class Data,class Compare>
+template<class Key, class Data, class Compare>
 template<class Operation>
-void AvlTree<Data, Compare> :: inorder(Operation op){
+void AvlTree<Key, Data, Compare> :: inorder(Operation op){
 	orderRecursion(root, op, Order::inOrder);
 }
 
-template<class Data,class Compare>
+template<class Key, class Data, class Compare>
 template<class Operation>
-void AvlTree<Data, Compare> :: postorder(Operation op){
+void AvlTree<Key, Data, Compare> :: postorder(Operation op){
 	orderRecursion(root, op, Order::postOrder);
 }
 
