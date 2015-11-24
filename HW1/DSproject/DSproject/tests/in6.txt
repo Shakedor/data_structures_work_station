@@ -1,0 +1,22 @@
+Init
+AddTrainer 1
+AddTrainer 2
+CatchPokemon 100 1 10
+CatchPokemon 200 2 10
+GetTopPokemon -1
+GetTopPokemon 0
+GetTopPokemon 3
+GetTopPokemon 1
+GetTopPokemon 2
+CatchPokemon 101 1 20
+CatchPokemon 201 2 20
+CatchPokemon 102 1 20
+CatchPokemon 202 2 20
+CatchPokemon 103 1 30
+CatchPokemon 203 2 35
+CatchPokemon 104 1 40
+CatchPokemon 204 2 55
+GetTopPokemon -1
+GetTopPokemon 1
+GetTopPokemon 2
+Quit

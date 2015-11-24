@@ -1,0 +1,17 @@
+Init done.
+AddTrainer: SUCCESS
+AddTrainer: SUCCESS
+CatchPokemon: SUCCESS
+CatchPokemon: SUCCESS
+CatchPokemon: SUCCESS
+CatchPokemon: SUCCESS
+CatchPokemon: SUCCESS
+CatchPokemon: SUCCESS
+CatchPokemon: SUCCESS
+CatchPokemon: SUCCESS
+CatchPokemon: SUCCESS
+CatchPokemon: SUCCESS
+Level	||	Pokemon
+1	||	102
+2	||	101
+Quit done.

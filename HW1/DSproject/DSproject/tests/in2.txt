@@ -1,0 +1,7 @@
+Init
+AddTrainer 0
+AddTrainer -13
+AddTrainer 4
+AddTrainer 4
+AddTrainer 5
+Quit

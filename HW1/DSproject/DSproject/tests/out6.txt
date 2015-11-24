@@ -1,0 +1,22 @@
+Init done.
+AddTrainer: SUCCESS
+AddTrainer: SUCCESS
+CatchPokemon: SUCCESS
+CatchPokemon: SUCCESS
+Pokemon with highest level is: 100
+Pokemon with highest level is: INVALID_INPUT
+Pokemon with highest level is: FAILURE
+Pokemon with highest level is: 100
+Pokemon with highest level is: 200
+CatchPokemon: SUCCESS
+CatchPokemon: SUCCESS
+CatchPokemon: SUCCESS
+CatchPokemon: SUCCESS
+CatchPokemon: SUCCESS
+CatchPokemon: SUCCESS
+CatchPokemon: SUCCESS
+CatchPokemon: SUCCESS
+Pokemon with highest level is: 204
+Pokemon with highest level is: 104
+Pokemon with highest level is: 204
+Quit done.

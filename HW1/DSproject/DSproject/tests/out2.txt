@@ -1,0 +1,7 @@
+Init done.
+AddTrainer: INVALID_INPUT
+AddTrainer: INVALID_INPUT
+AddTrainer: SUCCESS
+AddTrainer: FAILURE
+AddTrainer: SUCCESS
+Quit done.

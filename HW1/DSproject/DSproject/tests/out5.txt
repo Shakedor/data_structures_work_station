@@ -1,0 +1,17 @@
+Init done.
+AddTrainer: SUCCESS
+AddTrainer: SUCCESS
+CatchPokemon: SUCCESS
+CatchPokemon: SUCCESS
+FreePokemon: SUCCESS
+FreePokemon: SUCCESS
+CatchPokemon: SUCCESS
+CatchPokemon: SUCCESS
+LevelUp: INVALID_INPUT
+LevelUp: INVALID_INPUT
+LevelUp: INVALID_INPUT
+LevelUp: INVALID_INPUT
+LevelUp: INVALID_INPUT
+LevelUp: FAILURE
+LevelUp: SUCCESS
+Quit done.

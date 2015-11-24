@@ -1,0 +1,24 @@
+Init
+AddTrainer 4
+AddTrainer 3
+CatchPokemon 101 4 50
+AddTrainer 5
+CatchPokemon 101 5 25
+CatchPokemon 102 5 25
+GetTopPokemon -1
+LevelUp 102 26
+GetAllPokemonsByLevel -1
+FreePokemon 102
+GetAllPokemonsByLevel -1
+GetTopPokemon 5
+EvolvePokemon 101 105
+GetTopPokemon -1
+EvolvePokemon 105 101
+CatchPokemon 105 4 5
+CatchPokemon 120 5 15
+GetAllPokemonsByLevel -1
+GetAllPokemonsByLevel 4
+GetAllPokemonsByLevel 5
+UpdateLevels 5 4
+GetAllPokemonsByLevel -1
+Quit

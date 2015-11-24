@@ -1,0 +1,17 @@
+Init
+AddTrainer 1
+AddTrainer 2
+CatchPokemon 100 -5 10
+CatchPokemon 100 0 10
+CatchPokemon 100 3 10
+CatchPokemon 100 1 10
+CatchPokemon 0 1 10
+CatchPokemon -500 1 10
+CatchPokemon 100 3 10
+CatchPokemon 100 4 10
+CatchPokemon 100 1 10
+CatchPokemon 100 2 10
+CatchPokemon 300 2 10
+CatchPokemon 300 2 0
+CatchPokemon 300 2 -2
+Quit
