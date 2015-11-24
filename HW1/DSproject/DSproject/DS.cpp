@@ -1,81 +1,121 @@
-#include "pokemon.h"
-#include "trainer.h""
 #include "DS.h"
 
 
-DS::DS(){
-	// initialize the trainer AVL
-	// the pokemon by level MAVL
-	// the pokemon by id AVL
 
-	//if either of the 3 fail MEMERR, call destructor
-}
 
-DS::~DS(){
-	// check if any of the 3 trees are null, if so destroy them
-	// remember that for the pokemon AVL we need to 
-	//delete the actual pokemon for every pokemon in the tree
-
-}
-
-StatusType DS::AddTrainer(int trainerID){
+void DS::AddTrainer(int trainerID){
 	if (trainerID <= 0){
-		return INVALID_INPUT;
+		throw InvalidInput();
 	}
-	// if trainer already exists return failure
-
-	//create new trainer
-	// if allocation failed, return ALLOCFAIL
-
-	// insert trainer to T_AVL
-	return SUCCESS;
-
+	
+	t_AVL.insert(trainerID, trainer(trainerID));
 
 }
 
-StatusType DS::CatchPokemon(int pokemonID, int trainerID, int level){
+void DS::CatchPokemon(int pokemonID, int trainerID, int level){
 	// if either ints is not poisitve return invalidinput
-	// get trainer with that ID , if not exist return failure
+	if (pokemonID <= 0 || trainerID <= 0 || level <= 0){
+		throw InvalidInput();
+	}
+	
+	// get trainer with that ID , if not exist will throw failure
+	trainer& myTrainer = t_AVL.find(trainerID);
 
-	//get pokemon with that id, if exists return failure
+	//get pokemon with that id, if exists throw failure
+	try{
+		p_AVL.find(pokemonID);
+	}
+	catch (p_AVL.dataAlreadyExists&){// do nothing 
+	}
+	catch (...){
+		throw Failure();
+	}
 
-	// create new pokemon, if failed return allocation error.
-	//add it to the MAVL, AVL and to given trainer
+	
+	// add pokeymon to the MAVL, AVL and to given trainer
+	// if allocation error then remove from previously aded trees
+	p_AVL.insert(pokemonID, pokemon(pokemonID, trainerID, level));
+	pokemon* pokemonAddress = &p_AVL.find(pokemonID);
+	pokemonKey myKey = pokemonKey(pokemonID, level);
+	try{ 
+		pL_AVL.insert(myKey, pokemonAddress);
+		try{
+			myTrainer.tp_AVL.insert(myKey, pokemonAddress);
+		}
+		catch (std::bad_alloc){
+			pL_AVL.remove(myKey);
+			throw std::bad_alloc();
+		}
+		catch (...){
+			assert(0);
+		}
+	}
+	catch (std::bad_alloc&){
+		p_AVL.remove(pokemonID);
+		throw std::bad_alloc();		
+	}
+	catch (...){
+		assert(0);
+	}
 
-	//return success
 }
 
-StatusType DS::FreePokemon(int pokemonID){
+void DS::FreePokemon(int pokemonID){
 	// if id not positive return invalid input
-	// get pokemon with that id from AVL
-	// if null return failure.
-
+	if (pokemonID <= 0 ){
+		throw InvalidInput();
+	}
+	// get pokemon with that id from AVL, if not found will throw data does not exist
+	pokemon& myPokemon = p_AVL.find(pokemonID);
+	
 	//get its level and trainer id,
+	int trainerID = myPokemon.trainer_ID;
+	int level = myPokemon.level;
+	pokemonKey myKey = pokemonKey(pokemonID, level);
 	// get trainer.
+	trainer& myTrainer = t_AVL.find(trainerID);
 	// remove pokemon from all 3 trees and delete pokemon
+	myTrainer.tp_AVL.remove(myKey);
+	pL_AVL.remove(myKey);
+	p_AVL.remove(pokemonID);
 
 	// return success
 
 }
 
-StatusType DS::LevelUp(int pokemonID, int levelIncrease){
+void DS::LevelUp(int pokemonID, int levelIncrease){
 	// if int non positive return INVALID input
-	// get pokemon from AVL
-	// if not exists return failure.
-	// get level and trainer
-	
+	if (pokemonID <= 0 || levelIncrease <=0){
+		throw InvalidInput();
+	}
+
+	// get pokemon with that id from AVL, if not found will throw data does not exist
+	pokemon& myPokemon = p_AVL.find(pokemonID);
+
+	//get its level and trainer id,
+	int trainerID = myPokemon.trainer_ID;
+	int level = myPokemon.level;
+
+
 	// remove this pokemon from all 3 trees,
 	//change its level
 	// add it to all 3 trees
+	FreePokemon(pokemonID);
 
-	//return success
+	CatchPokemon(pokemonID, trainerID, level + levelIncrease);
 
 }
 
 
-StatusType DS::GetTopPokemon(int trainerID, int *pokemonID){
+void DS::GetTopPokemon(int trainerID, int *pokemonID){
 	//if id== null or trainerID==o return invalid input
+	if ( pokemonID==NULL || trainerID == 0){
+		throw InvalidInput();
+	}
 
+	if (trainerID < 0){
+		pokemonID=pL_AVL.
+	}
 	//if id >0 get trainer ID
 	// if not exist retrun failure
 
@@ -86,7 +126,7 @@ StatusType DS::GetTopPokemon(int trainerID, int *pokemonID){
 
 }
 
-StatusType DS::GetAllPokemonsByLevel(int trainerID, int **pokemons, int* numOfPokemon){
+void DS::GetAllPokemonsByLevel(int trainerID, int **pokemons, int* numOfPokemon){
 	//if pointer = null or trainer id =0 return invalid input
 
 	//if trainer id >0 and not exist return failure
@@ -100,7 +140,7 @@ StatusType DS::GetAllPokemonsByLevel(int trainerID, int **pokemons, int* numOfPo
 
 	//return success
 }
-StatusType DS::EvolvePokemon(int pokemonID, int evolvedID){
+void DS::EvolvePokemon(int pokemonID, int evolvedID){
 	// if either id <=0 return invalid input
 
 	//get pokemon with pokemon id and evolved id, if pid not exist or eveloved id does exist 
@@ -116,7 +156,7 @@ StatusType DS::EvolvePokemon(int pokemonID, int evolvedID){
 
 
 
-StatusType DS::UpdateLevels(void *DS, int stoneCode, int stoneFactor){
+void DS::UpdateLevels( int stoneCode, int stoneFactor){
 	//if code or factor <1 return invalid input
 	// make an array of trainers
 	//for each trainer, preform 2 conditional walks of pokemons according to is stonde code function
@@ -137,13 +177,6 @@ StatusType DS::UpdateLevels(void *DS, int stoneCode, int stoneFactor){
 //*************************
 
 
-void* Init(){	return new(DS);}StatusType AddTrainer(void *DS, int trainerID);StatusType CatchPokemon(void *DS, int pokemonID, int trainerID, int level);StatusType FreePokemon(void *DS, int pokemonID);StatusType LevelUp(void *DS, int pokemonID, int levelIncrease);StatusType GetTopPokemon(void *DS, int trainerID, int *pokemonID);StatusType GetAllPokemonsByLevel(void *DS, int trainerID, int **pokemons, int numOfPokemon);StatusType EvolvePokemon(void *DS, int pokemonID, int evolvedID);
-StatusType UpdateLevels(void *DS, int stoneCode, int stoneFactor);
-void Quit(void **DS){
-	if (DS != nullptr){
-		delete DS;
-	}
-}
 
 
 

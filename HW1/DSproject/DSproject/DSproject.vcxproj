@@ -68,13 +68,17 @@
   <ItemGroup>
     <ClInclude Include="AVL.h" />
     <ClInclude Include="DS.h" />
+    <ClInclude Include="library1.h" />
     <ClInclude Include="pokemon.h" />
+    <ClInclude Include="testsMacros.h" />
     <ClInclude Include="trainer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DS.cpp" />
     <ClCompile Include="DS_test.cpp" />
+    <ClCompile Include="library1.cpp" />
     <ClCompile Include="main1.cpp" />
+    <ClCompile Include="pokemon.cpp" />
     <ClCompile Include="trainer.cpp" />
     <ClCompile Include="trainer_test.cpp" />
   </ItemGroup>

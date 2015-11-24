@@ -1,31 +1,34 @@
 #ifndef DS_H
 #define DS_H
-
-typedef enum {
-	SUCCESS, FAILURE, ALLOCATION_ERROR, INVALID_INPUT
-
-}  StatusType;
+#include "pokemon.h"
+#include "trainer.h"
+#include "AVL.h"
+#include "library1.h"
+#include <new>
 
 class DS{
+	AvlTree<int, trainer, compareFuncInt> t_AVL;
+	AvlTree<int, pokemon, compareFuncInt> p_AVL;
+	AvlTree<pokemonKey, pokemon*, compareFuncPokKey> pL_AVL;
 
 
 public:
-	DS();
-	StatusType AddTrainer(int trainerID);
-	StatusType CatchPokemon(int pokemonID, int trainerID, int level);
-	StatusType FreePokemon(int pokemonID);
-	StatusType LevelUp(int pokemonID, int levelIncrease);
-	StatusType GetTopPokemon(int trainerID, int *pokemonID);
-	StatusType GetAllPokemonsByLevel(int trainerID, int **pokemons, int* numOfPokemon);
-	StatusType EvolvePokemon(int pokemonID, int evolvedID);
-	StatusType UpdateLevels(void *DS, int stoneCode, int stoneFactor);
-	~DS();
+	DS() :t_AVL(IDCompare), p_AVL(IDCompare), pL_AVL(pokemonLevelCompare){};
+	void AddTrainer(int trainerID);
+	void CatchPokemon(int pokemonID, int trainerID, int level);
+	void FreePokemon(int pokemonID);
+	void LevelUp(int pokemonID, int levelIncrease);
+	void GetTopPokemon(int trainerID, int *pokemonID);
+	void GetAllPokemonsByLevel(int trainerID, int **pokemons, int* numOfPokemon);
+	void EvolvePokemon(int pokemonID, int evolvedID);
+	void UpdateLevels(void *DS, int stoneCode, int stoneFactor);
+	~DS()= default;
+
+	class DSException{};
+	class InvalidInput : public DSException{};
+	class Failure : public DSException{};
 
 };
-
-void* Init();StatusType AddTrainer(void *DS, int trainerID);StatusType CatchPokemon(void *DS, int pokemonID, int trainerID, int level);StatusType FreePokemon(void *DS, int pokemonID);StatusType LevelUp(void *DS, int pokemonID, int levelIncrease);StatusType GetTopPokemon(void *DS, int trainerID, int *pokemonID);StatusType GetAllPokemonsByLevel(void *DS, int trainerID, int **pokemons, int* numOfPokemon);StatusType EvolvePokemon(void *DS, int pokemonID, int evolvedID);
-StatusType UpdateLevels(void *DS, int stoneCode, int stoneFactor);
-void Quit(void **DS);
 
 
 #endif // !DS_H

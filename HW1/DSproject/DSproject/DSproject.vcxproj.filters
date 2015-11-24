@@ -27,6 +27,12 @@
     <ClInclude Include="AVL.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="testsMacros.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="library1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main1.cpp">
@@ -42,6 +48,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DS_test.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="library1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pokemon.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
