@@ -67,6 +67,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AVL.h" />
+    <ClInclude Include="dataStructures.h" />
     <ClInclude Include="DS.h" />
     <ClInclude Include="library1.h" />
     <ClInclude Include="pokemon.h" />

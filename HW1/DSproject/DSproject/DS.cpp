@@ -1,9 +1,9 @@
-#include "DS.h"
+#include "DS_struct.h"
 
 
 
 
-void DS::AddTrainer(int trainerID){
+void DS_struct::AddTrainer(int trainerID){
 	if (trainerID <= 0){
 		throw InvalidInput();
 	}
@@ -12,7 +12,7 @@ void DS::AddTrainer(int trainerID){
 
 }
 
-void DS::CatchPokemon(int pokemonID, int trainerID, int level){
+void DS_struct::CatchPokemon(int pokemonID, int trainerID, int level){
 	// if either ints is not poisitve return invalidinput
 	if (pokemonID <= 0 || trainerID <= 0 || level <= 0){
 		throw InvalidInput();
@@ -25,7 +25,7 @@ void DS::CatchPokemon(int pokemonID, int trainerID, int level){
 	try{
 		p_AVL.find(pokemonID);
 	}
-	catch (p_AVL.dataAlreadyExists&){// do nothing 
+	catch (p_AVL::d){// do nothing 
 	}
 	catch (...){
 		throw Failure();
@@ -60,7 +60,7 @@ void DS::CatchPokemon(int pokemonID, int trainerID, int level){
 
 }
 
-void DS::FreePokemon(int pokemonID){
+void DS_struct::FreePokemon(int pokemonID){
 	// if id not positive return invalid input
 	if (pokemonID <= 0 ){
 		throw InvalidInput();
@@ -83,7 +83,7 @@ void DS::FreePokemon(int pokemonID){
 
 }
 
-void DS::LevelUp(int pokemonID, int levelIncrease){
+void DS_struct::LevelUp(int pokemonID, int levelIncrease){
 	// if int non positive return INVALID input
 	if (pokemonID <= 0 || levelIncrease <=0){
 		throw InvalidInput();
@@ -107,7 +107,7 @@ void DS::LevelUp(int pokemonID, int levelIncrease){
 }
 
 
-void DS::GetTopPokemon(int trainerID, int *pokemonID){
+void DS_struct_struct::GetTopPokemon(int trainerID, int *pokemonID){
 	//if id== null or trainerID==o return invalid input
 	if ( pokemonID==NULL || trainerID == 0){
 		throw InvalidInput();
@@ -126,21 +126,21 @@ void DS::GetTopPokemon(int trainerID, int *pokemonID){
 
 }
 
-void DS::GetAllPokemonsByLevel(int trainerID, int **pokemons, int* numOfPokemon){
+void DS_struct::GetAllPokemonsByLevel(int trainerID, int **pokemons, int* numOfPokemon){
 	//if pointer = null or trainer id =0 return invalid input
 
 	//if trainer id >0 and not exist return failure
 
-	//get size of MAVL tree from either DS or appropriate trainer
+	//get size of MAVL tree from either DS_struct or appropriate trainer
 
 	// malloc an array of such ints. // if failed return allocation error
 	// preform an postorder walk on the appropriate MAVL tree, for each pokemon put its id in the index
 
-	//put number of pokemon in  pointer and the array of ids in the array pointer
+	//put number of pokemon in  pointer and the array of iDS_struct in the array pointer
 
 	//return success
 }
-void DS::EvolvePokemon(int pokemonID, int evolvedID){
+void DS_struct::EvolvePokemon(int pokemonID, int evolvedID){
 	// if either id <=0 throw invalid input
 	if (pokemonID <= 0 || evolvedID <= 0){
 		throw InvalidInput();
@@ -172,17 +172,17 @@ void DS::EvolvePokemon(int pokemonID, int evolvedID){
 		assert(0);
 	}
 	// if evolved exists then we get here and throw failure
-	
+	throw Failure();
 
 }
 
 
 
-void DS::UpdateLevels( int stoneCode, int stoneFactor){
+void DS_struct::UpdateLevels( int stoneCode, int stoneFactor){
 	//if code or factor <1 return invalid input
 	// make an array of trainers
 	//for each trainer, preform 2 conditional walks of pokemons according to is stonde code function
-	// destroying the tree after wards
+	// destroying the tree after warDS_struct
 	// so 4 arrays of total size 2n_trainer for each trainer
 	// each 2 walks (for condition true and false) reconstruct to an avl tree
 
