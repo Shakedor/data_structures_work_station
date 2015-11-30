@@ -46,6 +46,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -68,14 +69,14 @@
   <ItemGroup>
     <ClInclude Include="AVL.h" />
     <ClInclude Include="dataStructures.h" />
-    <ClInclude Include="DS.h" />
+    <ClInclude Include="DS_struct.h" />
     <ClInclude Include="library1.h" />
     <ClInclude Include="pokemon.h" />
     <ClInclude Include="testsMacros.h" />
     <ClInclude Include="trainer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DS.cpp" />
+    <ClCompile Include="DS_struct.cpp" />
     <ClCompile Include="DS_test.cpp" />
     <ClCompile Include="library1.cpp" />
     <ClCompile Include="main1.cpp" />

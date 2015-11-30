@@ -13,12 +13,12 @@ public:
 	int ID;
 	AvlTree<pokemonKey, pokemon*, compareFuncPokKey> tp_AVL;
 
-	trainer(int id) : ID(id), tp_AVL(pokemonLevelCompare){};
+	trainer(int id) : ID(id), tp_AVL(pokemonLevelCompare){}
 	~trainer();
 
 };
 
 int trainerIDCompare(trainer& a, trainer& b);
-typedef int(*compareTrainer)(int,int)
+typedef int(*compareTrainer)(int, int);
 
 #endif // !TRA_H

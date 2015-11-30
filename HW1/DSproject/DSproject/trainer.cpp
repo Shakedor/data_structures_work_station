@@ -2,7 +2,7 @@
 #include "trainer.h"
 
 
-int trainerIDCompare(trainer& a, trainer& b){
+; int trainerIDCompare(trainer& a, trainer& b){
 	if (a.ID > b.ID){
 		return 1;
 	}

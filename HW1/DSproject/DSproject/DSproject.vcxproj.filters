@@ -18,9 +18,6 @@
     <ClInclude Include="pokemon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DS.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="trainer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -36,15 +33,15 @@
     <ClInclude Include="dataStructures.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DS_struct.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="trainer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DS.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="trainer_test.cpp">
@@ -57,6 +54,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="pokemon.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DS_struct.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -7,7 +7,97 @@ namespace dataStructures{
 	class failureExceptions : public dataSturctExceptions {};
 	class dataAlreadyExists : public failureExceptions {};
 	class dataDoesNotExist : public failureExceptions {};
-	class sturctIsEmpty : public failureExceptions {};
+	class stucountertIsEmpty : public failureExceptions {};
+	class sizeOverFlow : public failureExceptions {};
+
+
+	class counter{
+		int number;
+
+	public:
+		counter() :number(0){}
+
+		void increment(){
+			number++;
+		}
+
+		void decrement(){
+			--number;
+		}
+
+		int getNumber(){
+			return number;
+		}
+
+	};
+
+
+	template<class data>
+	class smart_pointer{
+		data* dataPointer;
+		counter* Counter;
+	public:
+		smart_pointer() : dataPointer(NULL){
+			Counter = new counter();
+			Counter->increment();
+		}
+
+		smart_pointer(data* dataP) : dataPointer(dataP){
+			 
+			Counter = new counter();
+			Counter->increment();
+		}
+
+		smart_pointer(const smart_pointer<data>& sp) : dataPointer(sp.dataPointer), Counter(sp.Counter)
+		{
+			Counter->increment();
+		}
+
+		~smart_pointer()
+		{
+			Counter->decrement();
+			if (Counter->getNumber() == 0)
+			{
+				delete dataPointer;
+				delete Counter;
+			}
+		}
+
+		data& operator* ()
+		{
+			return *dataPointer;
+		}
+
+		data* operator-> ()
+		{
+			return dataPointer;
+		}
+
+		smart_pointer<data>& operator = (const smart_pointer<data>& sp)
+		{
+			
+			if (this != &sp) // avoid assigning to itself
+			{
+				//destruction protocol for old data
+				Counter->decrement;
+
+				if (Counter->getNumber == 0)
+				{
+					delete dataPointer;
+					delete Counter;
+				}
+
+				//copy fields and increment
+				dataPointer = sp.dataPointer;
+				Counter = sp.Counter;
+				Counter->increment();
+			}
+			return *this;
+		}
+
+
+	};
+
 
 
 }

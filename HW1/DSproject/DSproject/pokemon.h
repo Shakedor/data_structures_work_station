@@ -16,7 +16,7 @@ public:
 	int trainer_ID;
 	int pokemon_ID;
 	int level;
-	~pokemon() = default;
+	~pokemon(){};
 };
 
 class pokemonKey{

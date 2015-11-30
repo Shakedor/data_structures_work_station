@@ -1,5 +1,5 @@
 #include "library1.h"
-#include "DS.h"
+#include "DS_struct.h"
 #include "dataStructures.h"
 
 

@@ -1,5 +1,5 @@
 #include "DS_struct.h"
-
+#include "dataStructures.h"
 
 
 
@@ -8,7 +8,7 @@ void DS_struct::AddTrainer(int trainerID){
 		throw InvalidInput();
 	}
 	
-	t_AVL.insert(trainerID, trainer(trainerID));
+	t_AVL.insert(trainerID, &trainer(trainerID));
 
 }
 
@@ -19,13 +19,13 @@ void DS_struct::CatchPokemon(int pokemonID, int trainerID, int level){
 	}
 	
 	// get trainer with that ID , if not exist will throw failure
-	trainer& myTrainer = t_AVL.find(trainerID);
+	trainer* myTrainer = t_AVL.find(trainerID);
 
 	//get pokemon with that id, if exists throw failure
 	try{
 		p_AVL.find(pokemonID);
 	}
-	catch (p_AVL::d){// do nothing 
+	catch (dataStructures::dataDoesNotExist&){// do nothing 
 	}
 	catch (...){
 		throw Failure();
@@ -34,13 +34,13 @@ void DS_struct::CatchPokemon(int pokemonID, int trainerID, int level){
 	
 	// add pokeymon to the MAVL, AVL and to given trainer
 	// if allocation error then remove from previously aded trees
-	p_AVL.insert(pokemonID, pokemon(pokemonID, trainerID, level));
-	pokemon* pokemonAddress = &p_AVL.find(pokemonID);
+	p_AVL.insert(pokemonID, &pokemon(pokemonID, trainerID, level));
+	pokemon* pokemonAddress = p_AVL.find(pokemonID);
 	pokemonKey myKey = pokemonKey(pokemonID, level);
 	try{ 
 		pL_AVL.insert(myKey, pokemonAddress);
 		try{
-			myTrainer.tp_AVL.insert(myKey, pokemonAddress);
+			myTrainer->tp_AVL.insert(myKey, pokemonAddress);
 		}
 		catch (std::bad_alloc){
 			pL_AVL.remove(myKey);
@@ -66,16 +66,16 @@ void DS_struct::FreePokemon(int pokemonID){
 		throw InvalidInput();
 	}
 	// get pokemon with that id from AVL, if not found will throw data does not exist
-	pokemon& myPokemon = p_AVL.find(pokemonID);
+	pokemon* myPokemon = p_AVL.find(pokemonID);
 	
 	//get its level and trainer id,
-	int trainerID = myPokemon.trainer_ID;
-	int level = myPokemon.level;
+	int trainerID = myPokemon->trainer_ID;
+	int level = myPokemon->level;
 	pokemonKey myKey = pokemonKey(pokemonID, level);
 	// get trainer.
-	trainer& myTrainer = t_AVL.find(trainerID);
+	trainer* myTrainer = t_AVL.find(trainerID);
 	// remove pokemon from all 3 trees and delete pokemon
-	myTrainer.tp_AVL.remove(myKey);
+	myTrainer->tp_AVL.remove(myKey);
 	pL_AVL.remove(myKey);
 	p_AVL.remove(pokemonID);
 
@@ -90,11 +90,11 @@ void DS_struct::LevelUp(int pokemonID, int levelIncrease){
 	}
 
 	// get pokemon with that id from AVL, if not found will throw data does not exist
-	pokemon& myPokemon = p_AVL.find(pokemonID);
+	pokemon* myPokemon = p_AVL.find(pokemonID);
 
 	//get its level and trainer id,
-	int trainerID = myPokemon.trainer_ID;
-	int level = myPokemon.level;
+	int trainerID = myPokemon->trainer_ID;
+	int level = myPokemon->level;
 
 
 	// remove this pokemon from all 3 trees,
@@ -107,22 +107,45 @@ void DS_struct::LevelUp(int pokemonID, int levelIncrease){
 }
 
 
-void DS_struct_struct::GetTopPokemon(int trainerID, int *pokemonID){
+void DS_struct::GetTopPokemon(int trainerID, int *pokemonID){
 	//if id== null or trainerID==o return invalid input
 	if ( pokemonID==NULL || trainerID == 0){
-		throw InvalidInput();
+		throw DS_struct::InvalidInput();
+	}
+	*pokemonID = -1; // deafult value
+	pokemon* topPokemon = NULL;
+
+	// if id <0 get top pokemon id from pL_AVL
+	if (trainerID < 0){
+		try{ 
+			topPokemon = pL_AVL.get_max(); 
+		}
+		catch (dataStructures::dataDoesNotExist&){
+			;
+		}
+		catch (...){
+			assert(0);
+		}
 	}
 
-	if (trainerID < 0){
-		pokemonID=pL_AVL.
-	}
 	//if id >0 get trainer ID
-	// if not exist retrun failure
+	// no trainer is an exception that will be caught
+	// no max pokemon should result in the default value remaining in pokemonID pointer
+	else if (trainerID>0){
+		trainer* myTrainer = t_AVL.find(trainerID);
+		try{
+			topPokemon = myTrainer->tp_AVL.get_max();
+		}
+		catch (dataStructures::dataDoesNotExist&){
+			;
+		}
+		catch (...){
+			assert(0);
+		}
+	}
 
 	//if exist get its top pokemon id
-
-	// if id <0 get top pokemon id from p_MAVL
-
+	*pokemonID = topPokemon->pokemon_ID;
 
 }
 
@@ -148,16 +171,16 @@ void DS_struct::EvolvePokemon(int pokemonID, int evolvedID){
 
 	//get pokemon with pokemon id, if not exist will throw failure
 
-	pokemon& myPokemon = p_AVL.find(pokemonID);
+	pokemon* myPokemon = p_AVL.find(pokemonID);
 
 	//get its level and trainer id,
-	int trainerID = myPokemon.trainer_ID;
-	int level = myPokemon.level;
+	int trainerID = myPokemon->trainer_ID;
+	int level = myPokemon->level;
 
 	try{// if evolved does not exist, then continue evolution in catch
 		p_AVL.find(evolvedID);
 	}
-	catch (p_AVL.dataDoesNotExist&){
+	catch (dataStructures::dataDoesNotExist&){
 		// remove pokemon from all 3 trees,
 		//catch new pokemon
 
