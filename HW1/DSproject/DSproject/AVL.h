@@ -4,6 +4,8 @@
 
 #include <cstdlib>
 #include <cassert>
+#include "dataStructures.h"
+#include <iostream>	//TODO: REMOVE
 
 template<class T>
 const T& max(const T& a, const T& b){
@@ -15,8 +17,32 @@ const T& abs(const T& a){
 	return max(a, -a);
 }
 
+// Merge A and B to C in descending order.
+// Assumes A and B are in descending order
+template<class T, class Compare>
+void merge(T* A, T* B, T* C, int sizeA, int sizeB){
+	int ai = 0, bi = 0, ci = 0;
+	while (ai < sizeA && bi < sizeB) {
+		if (Compare(A[ai], B[bi]) <= 0) {
+			  C[ci++] = B[bi++];
+		} else {
+			  C[ci++] = A[ai++];
+		}
+	}
+	if (ai < sizeA) {
+		for (int p = ai; p < sizeA; ++p) {
+			  C[ci++] = A[p];
+		}
+	} else {
+		for (int p = bi; p < sizeB; ++p) {
+			  C[ci++] = B[p];
+		}
+	}
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////			AvlNode			////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
 template<class Key, class Data>
 class AvlNode {
@@ -51,6 +77,7 @@ public:
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////			AvlTree			////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
 /*
  * This is a template implementation of AVL binary search tree.
@@ -69,6 +96,49 @@ class AvlTree {
 	AvlNode<Key, Data>* max_node;
 	Compare cmp;
 	int treeSize;
+
+	typedef struct element{
+		Key key;
+		Data data;
+	} *Element;
+
+	class treeToArrOperation{
+		Element* arr;
+		int current;
+		const int size;
+	public:
+		treeToArrOperation(Element* arr, int size) : arr(arr), current(0), size(size){}
+		void operator()(AvlNode<Key, Data>* v){
+			assert(current <= size);
+			arr[current]->key = v->key;
+			arr[current]->data = v->data;
+			++current;
+		}
+	};
+	void treeToArr(Element*) const;
+
+	AvlNode<Key, Data>* buildEmptyAvl(int size);
+
+	class elementCompare{
+		int operator()(const Element& element){
+			return cmp(element->data);
+		}
+	};
+
+	class arrToTreeOperation{
+		Element* arr;
+		int current;
+		const int size;
+	public:
+		arrToTreeOperation(Element* arr, int size) : arr(arr), current(0), size(size){}
+		void operator()(AvlNode<Key, Data>* v){
+			assert(current <= size);
+			v->key = arr[current]->key;
+			v->data = arr[current]->data;
+			++current;
+		}
+	};
+	void arrToTree(Element* arr);
 
 	void destroyTree(AvlNode<Key, Data>*);
 
@@ -98,7 +168,6 @@ public:
 
 	AvlTree(const Compare& Cmp) : root(NULL), max_node(NULL), cmp(Cmp), treeSize(0){}
 	AvlTree(const AvlTree& a, const AvlTree& b); // O(max(a.treeSize, b.treeSize))
-	template<class Condition> AvlTree(const AvlTree&, Condition); // O(treeSize))
 
 	~AvlTree(){
 		destroyTree(root);
@@ -107,18 +176,18 @@ public:
 	//May throw exceptions.
 	void insert(const Key& key, const Data& data);
 	void remove(const Key& key);
+	template<class Condition> void removeIf(Condition); //Removes all elements that condition(data)==true
 	Data& find(const Key& key);
 	Data& get_max();
+	int get_size() const;
 
 	// Calls op(data) for every object.
 	template<class Operation> void preorder(Operation op);
 	template<class Operation> void inorder(Operation op);
 	template<class Operation> void postorder(Operation op);
 
-	class avlException{};
-	class dataAlreadyExists : public avlException {};
-	class dataDoesNotExist : public avlException {};
-	class avlIsEmpty : public avlException {};
+	void printAvlRecursive(AvlNode<Key, Data>* v, int depth);
+	void printAvl();
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -196,6 +265,46 @@ AvlNode<Key, Data>* AvlNode<Key, Data> :: rotate_left(){
 //////																	////////
 ////////////////////////////////////////////////////////////////////////////////
 
+//////////////////////////////////////////////////////////
+//////	AvlTree constructor from two trees method	//////
+//////////////////////////////////////////////////////////
+
+template<class Key, class Data, class Compare>
+void AvlTree<Key, Data, Compare> :: treeToArr (Element* arr) const{
+	AvlTree<Key, Data, Compare> :: orderRecursion(root,
+			treeToArrOperation(arr, treeSize),
+			Order::inOrder);
+}
+
+template<class Key, class Data, class Compare>
+void AvlTree<Key, Data, Compare> :: arrToTree(Element* arr){
+	AvlTree<Key, Data, Compare> :: orderRecursion(root,
+			arrToTreeOperation(arr, treeSize),
+			Order::inOrder);
+}
+
+template<class Key, class Data, class Compare>
+AvlTree<Key, Data, Compare> :: AvlTree(const AvlTree& a, const AvlTree& b) {
+	int sizeA = a.get_size();
+	int sizeB = b.get_size();
+
+	Element A[] = new Element(sizeA);
+	Element B[] = new Element(sizeB);
+	Element C[] = new Element(sizeA + sizeB); //TODO: error management
+
+	a.treeToArr(A);
+	b.treeToArr(B);
+
+	merge<Data, elementCompare>(A, B, C, sizeA, sizeB);
+
+	buildEmptyAvl(sizeA + sizeB);
+	arrToTree(C);
+
+	delete(C);
+	delete(B);
+	delete(A);
+}
+
 //////////////////////////////////////
 //////	AvlTree destroy method	//////
 //////////////////////////////////////
@@ -265,7 +374,7 @@ Data& AvlTree<Key, Data, Compare> :: find(const Key& key){
 	if (cmp(key, v->key) == 0){
 		return v->data;
 	}
-	throw dataDoesNotExist();
+	throw dataStructures::dataDoesNotExist();
 }
 
 template<class Key, class Data, class Compare>
@@ -274,10 +383,14 @@ Data& AvlTree<Key, Data, Compare> :: get_max(){
 		return max_node->data;
 	}
 	assert(treeSize == 0 && !root);
-	throw avlIsEmpty();
+	throw dataStructures::sturctIsEmpty();
 }
 
-
+template<class Key, class Data, class Compare>
+int AvlTree<Key, Data, Compare> :: get_size() const{
+	assert(treeSize >= 0);
+	return treeSize;
+}
 
 //////////////////////////////////////////////
 //////	AvlTree updateMaxNode method	//////
@@ -293,7 +406,7 @@ void AvlTree<Key, Data, Compare> :: updateMaxNode(){
 		max = v;
 		v = v->left;
 	}
-	return max;
+	max_node = max;
 }
 
 
@@ -307,7 +420,7 @@ AvlNode<Key, Data>* AvlTree<Key, Data, Compare> :: doInsert(const Key& key, cons
 
 	switch (cmp(v->key, key)){
 	case 0:
-		throw dataAlreadyExists();
+		throw dataStructures::dataAlreadyExists();
 		break;
 	case 1:
 		v->left = new AvlNode<Key, Data>(key, data, v);
@@ -337,7 +450,7 @@ template<class Key, class Data, class Compare>
 AvlNode<Key, Data>* AvlTree<Key, Data, Compare> :: doRemove(const Key& key){
 	AvlNode<Key, Data>* v = do_find(key);
 	if (cmp(v->key, key) != 0){
-		throw dataDoesNotExist();
+		throw dataStructures::dataDoesNotExist();
 	}
 
 	AvlNode<Key, Data>** vPtr = findPtrInParent(v); 	//pointer to v in the parent of v.
@@ -372,7 +485,7 @@ AvlNode<Key, Data>* AvlTree<Key, Data, Compare> :: doRemove(const Key& key){
 template<class Key, class Data, class Compare>
 void AvlTree<Key, Data, Compare> :: remove(const Key& key){
 	if (!root){
-		throw avlIsEmpty();
+		throw dataStructures::sturctIsEmpty();
 	} else {
 		fixPath (doRemove(key));
 	}
@@ -451,33 +564,66 @@ AvlNode<Key, Data>* AvlTree<Key, Data, Compare> :: roll_RL(AvlNode<Key, Data>* v
 
 template<class Key, class Data, class Compare>
 template<class Operation>
-void AvlTree<Key, Data, Compare> :: orderRecursion(AvlNode<Key, Data>* v, Operation op, Order order){
+void AvlTree<Key, Data, Compare> :: orderRecursion(AvlNode<Key, Data>* v, Operation op,
+		Order order){
 	if (!v){
 		return;
 	}
-	if (order == Order::preOrder) {op(v->data);}
-	inorderRecursion(v->right);
-	if (order == Order::inOrder) {op(v->data);}
-	inorderRecursion(v->left);
-	if (order == Order::postOrder) {op(v->data);}
+	if (order == Order::preOrder) {op(v);}
+	orderRecursion(v->right, op, order);
+	if (order == Order::inOrder) {op(v);}
+	orderRecursion(v->left, op, order);
+	if (order == Order::postOrder) {op(v);}
 }
+
+template<class Key, class Data, class Operation>
+class dataOperation{
+	Operation& op;
+public:
+	dataOperation(Operation& op) : op(op){}
+	void operator()(AvlNode<Key, Data>* v){
+		op(v->data);
+	}
+};
 
 template<class Key, class Data, class Compare>
 template<class Operation>
 void AvlTree<Key, Data, Compare> :: preorder(Operation op){
-	orderRecursion(root, op, Order::preOrder);
+	orderRecursion(root, dataOperation<Key, Data, Operation>(op), Order::preOrder);
 }
 
 template<class Key, class Data, class Compare>
 template<class Operation>
 void AvlTree<Key, Data, Compare> :: inorder(Operation op){
-	orderRecursion(root, op, Order::inOrder);
+	orderRecursion(root, dataOperation<Key, Data, Operation>(op), Order::inOrder);
 }
 
 template<class Key, class Data, class Compare>
 template<class Operation>
 void AvlTree<Key, Data, Compare> :: postorder(Operation op){
-	orderRecursion(root, op, Order::postOrder);
+	orderRecursion(root, dataOperation<Key, Data, Operation>(op), Order::postOrder);
 }
+
+
+
+
+template<class Key, class Data, class Compare>
+void AvlTree<Key, Data, Compare> :: printAvlRecursive(AvlNode<Key, Data>* v, int depth){
+	if (!v){
+		return;
+	}
+	printAvlRecursive(v->left, depth+1);
+	for (int i=0 ; i < depth ; ++i){
+		std::cout << "  ";
+	}
+	std::cout << v->key << "," << v->data << std::endl;
+	printAvlRecursive(v->right,depth+1);
+}
+
+template<class Key, class Data, class Compare>
+void AvlTree<Key, Data, Compare> :: printAvl(){
+	printAvlRecursive(root, 0);
+}
+
 
 #endif /* AVL_H_ */
