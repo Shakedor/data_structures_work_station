@@ -119,9 +119,7 @@ class AvlTree {
 		void operator()(AvlNode<Key, Data>* v){
 			assert(current <= size);
 			assert(v && arr);
-			Key* keyPtrr = v->keyPtr;
-
-			arr[current].keyPtr = keyPtrr;
+			arr[current].keyPtr = v->keyPtr;
 			arr[current].dataPtr = v->dataPtr;
 			++current;
 		}
@@ -167,10 +165,11 @@ class AvlTree {
 	public:
 		arrToTreeOperation(Element arr, int size) : arr(arr), current(0), size(size){}
 		void operator()(AvlNode<Key, Data>* v){
-			assert(current <= size);
-			v->keyPtr = new Key(*arr[current].keyPtr);
-			v->dataPtr = new Data(*arr[current].dataPtr);
-			++current;
+			if(current < size){
+				v->keyPtr = new Key(*arr[current].keyPtr);
+				v->dataPtr = new Data(*arr[current].dataPtr);
+				++current;
+			}
 		}
 	};
 	void arrToTree(Element arr);
@@ -358,6 +357,8 @@ AvlTree<Key, Data, Compare> :: AvlTree(const AvlTree& a, const AvlTree& b) {
 	merge<struct element, elementCompare>(elementCompare(cmp), A, B, C, sizeA, sizeB);
 
 	root = buildEmptyAvl(sizeA + sizeB);
+	treeSize = sizeA + sizeB;
+	cmp = a.cmp;
 	arrToTree(C);
 
 	delete(C);
@@ -632,9 +633,9 @@ void AvlTree<Key, Data, Compare> :: orderRecursionHelper(AvlNode<Key, Data>* v, 
 		return;
 	}
 	if (order == Order::preOrder) {op(v);}
-	orderRecursionHelper(v->right, op, order);
-	if (order == Order::inOrder) {op(v);}
 	orderRecursionHelper(v->left, op, order);
+	if (order == Order::inOrder) {op(v);}
+	orderRecursionHelper(v->right, op, order);
 	if (order == Order::postOrder) {op(v);}
 }
 
@@ -653,9 +654,9 @@ void AvlTree<Key, Data, Compare> :: orderRecursionHelper(AvlNode<Key, Data>* v, 
 		return;
 	}
 	if (order == Order::preOrder) {op(v);}
-	orderRecursionHelper(v->right, op, order);
-	if (order == Order::inOrder) {op(v);}
 	orderRecursionHelper(v->left, op, order);
+	if (order == Order::inOrder) {op(v);}
+	orderRecursionHelper(v->right, op, order);
 	if (order == Order::postOrder) {op(v);} //TODO: eliminate code duplication
 }
 
