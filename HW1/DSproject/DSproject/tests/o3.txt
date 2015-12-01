@@ -4,3 +4,14 @@ AddTrainer: SUCCESS
 CatchPokemon: INVALID_INPUT
 CatchPokemon: INVALID_INPUT
 CatchPokemon: FAILURE
+CatchPokemon: SUCCESS
+CatchPokemon: INVALID_INPUT
+CatchPokemon: INVALID_INPUT
+CatchPokemon: FAILURE
+CatchPokemon: FAILURE
+CatchPokemon: FAILURE
+CatchPokemon: FAILURE
+CatchPokemon: SUCCESS
+CatchPokemon: INVALID_INPUT
+CatchPokemon: INVALID_INPUT
+Quit done.

@@ -1,0 +1,15 @@
+Init done.
+AddTrainer: SUCCESS
+AddTrainer: SUCCESS
+CatchPokemon: SUCCESS
+CatchPokemon: SUCCESS
+CatchPokemon: SUCCESS
+CatchPokemon: SUCCESS
+FreePokemon: INVALID_INPUT
+FreePokemon: INVALID_INPUT
+FreePokemon: FAILURE
+FreePokemon: SUCCESS
+FreePokemon: SUCCESS
+CatchPokemon: SUCCESS
+CatchPokemon: SUCCESS
+Quit done.

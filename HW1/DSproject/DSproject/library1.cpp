@@ -33,7 +33,7 @@ StatusType FreePokemon(void *DS, int pokemonID){
 
 StatusType LevelUp(void *DS, int pokemonID, int levelIncrease){
 	DS_struct* ds = (DS_struct*)DS;
-	TRY_CATCH(ds->FreePokemon(pokemonID););
+	TRY_CATCH(ds->LevelUp(pokemonID, levelIncrease););
 }
 
 
