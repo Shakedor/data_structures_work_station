@@ -6,6 +6,7 @@
 #include <cassert>
 #include "dataStructures.h"
 #include <iostream>	//TODO: REMOVE
+#include <cmath>
 
 template<class T>
 const T& max(const T& a, const T& b){
@@ -127,6 +128,24 @@ class AvlTree {
 
 	};
 	void treeToArr(Element) const;
+
+	class addNodesToFullAvl{
+		int toAdd;
+	public:
+		addNodesToFullAvl(int toAdd) : toAdd(toAdd){}
+		void operator()(AvlNode<Key, Data>* v){
+			if (!v->left && !v->right){
+				if (toAdd > 1){
+					v->set_left(new AvlNode<Key, Data>());
+					v->set_right(new AvlNode<Key, Data>());
+					toAdd -= 2;
+				} else if (toAdd == 1){
+					v->set_left(new AvlNode<Key, Data>());
+					--toAdd;
+				}
+			}
+		}
+	};
 
 	AvlNode<Key, Data>* buildEmptyFullAvl(int size);
 	AvlNode<Key, Data>* buildEmptyAvl(int size);
@@ -315,8 +334,13 @@ AvlNode<Key, Data>* AvlTree<Key, Data, Compare> :: buildEmptyFullAvl(int height)
 template<class Key, class Data, class Compare>
 AvlNode<Key, Data>* AvlTree<Key, Data, Compare> :: buildEmptyAvl(int size){
 	int internalNodes = size/2;
-	AvlNode<Key, Data>* avl = buildEmptyFullAvl(internalNodes);
-	return avl; //TODO: wrong!!!
+	int leafNodes = size - internalNodes;
+	int fullAvlHeight = int(log2(internalNodes));
+
+	AvlNode<Key, Data>* avl = buildEmptyFullAvl(fullAvlHeight);
+	orderRecursion(avl, addNodesToFullAvl(leafNodes),
+			Order::postOrder);
+	return avl;
 }
 
 template<class Key, class Data, class Compare>
@@ -364,7 +388,9 @@ void AvlTree<Key, Data, Compare> :: destroyTree(AvlNode<Key, Data>* v){
 //If data isn't found - returns a pointer to its 'wanna-be' parent
 template<class Key, class Data, class Compare>
 AvlNode<Key, Data>* AvlTree<Key, Data, Compare> :: do_find(const Key& key){
-	assert(root);
+	if (!root){
+		throw dataStructures::sturctIsEmpty();
+	}
 	AvlNode<Key, Data>* current = root;
 	AvlNode<Key, Data>* next = NULL; //Pointer to left\right field (which is also a pointer) of current
 	bool found = false;
