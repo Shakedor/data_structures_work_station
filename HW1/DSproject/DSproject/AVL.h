@@ -407,8 +407,8 @@ AvlNode<Key, Data>** AvlTree<Key, Data, Compare> :: findPtrInParent(AvlNode<Key,
 template<class Key, class Data, class Compare>
 Data& AvlTree<Key, Data, Compare> :: find(const Key& key){
 	AvlNode<Key, Data>* v = do_find(key);
-	if (cmp(key, v->key) == 0){
-		return v->data;
+	if (cmp(*keyPtr, *v->keyPtr) == 0){
+		return *v->dataPtr;
 	}
 	throw dataStructures::dataDoesNotExist();
 }
@@ -416,7 +416,7 @@ Data& AvlTree<Key, Data, Compare> :: find(const Key& key){
 template<class Key, class Data, class Compare>
 Data& AvlTree<Key, Data, Compare> :: get_max(){
 	if (max_node){
-		return max_node->data;
+		return *max_node->dataPtr;
 	}
 	assert(treeSize == 0 && !root);
 	throw dataStructures::sturctIsEmpty();
