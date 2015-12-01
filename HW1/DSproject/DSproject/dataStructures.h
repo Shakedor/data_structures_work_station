@@ -9,7 +9,7 @@ namespace dataStructures{
 	class dataDoesNotExist : public failureExceptions {};
 	class stucountertIsEmpty : public failureExceptions {};
 	class sizeOverFlow : public failureExceptions {};
-
+	class sturctIsEmpty : public failureExceptions{};
 
 	class counter{
 		int number;
