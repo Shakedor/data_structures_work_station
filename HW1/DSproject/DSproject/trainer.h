@@ -16,7 +16,7 @@ public:
 	AvlTree<pokemonKey, smart_pointer<pokemon>, compareFuncPokKey> tp_AVL;
 
 	trainer(int id) : ID(id), tp_AVL(pokemonLevelCompare){}
-	~trainer();
+	~trainer(){}
 
 };
 

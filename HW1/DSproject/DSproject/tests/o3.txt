@@ -1,0 +1,6 @@
+Init done.
+AddTrainer: SUCCESS
+AddTrainer: SUCCESS
+CatchPokemon: INVALID_INPUT
+CatchPokemon: INVALID_INPUT
+CatchPokemon: FAILURE

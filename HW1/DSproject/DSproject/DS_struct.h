@@ -25,7 +25,7 @@ public:
 	void GetAllPokemonsByLevel(int trainerID, int **pokemons, int* numOfPokemon);
 	void EvolvePokemon(int pokemonID, int evolvedID);
 	void UpdateLevels(int stoneCode, int stoneFactor);
-	~DS_struct()= default;
+	~DS_struct(){}
 
 	class DSException{};
 	class InvalidInput : public DSException{};

@@ -56,7 +56,8 @@ StatusType UpdateLevels(void *DS, int stoneCode, int stoneFactor){
 }
 
 void Quit(void **DS){
-	if (DS != nullptr){
-		delete DS;
+	if (DS != NULL){
+		delete *DS;
+		*DS = NULL;
 	}
 }

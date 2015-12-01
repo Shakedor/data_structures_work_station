@@ -1,6 +1,6 @@
 #include "pokemon.h"
 
-int IDCompare(int& a, int& b){
+int IDCompare(int a, int b){
 	if (a > b){
 		return 1;
 	}
@@ -12,18 +12,18 @@ int IDCompare(int& a, int& b){
 	}
 }
 
-int pokemonLevelCompare(pokemonKey* a, pokemonKey* b){
-	if (a->level > b->level){
+int pokemonLevelCompare(pokemonKey a, pokemonKey b){
+	if (a.level > b.level){
 		return 1;
 	}
-	else if (a->level < b->level){
+	else if (a.level < b.level){
 		return -1;
 	}
 	else{
-		if (a->pokemon_ID > b->pokemon_ID){
+		if (a.pokemon_ID > b.pokemon_ID){
 			return 1;
 		}
-		else if (a->pokemon_ID < b->pokemon_ID){
+		else if (a.pokemon_ID < b.pokemon_ID){
 			return -1;
 		}
 		else{
