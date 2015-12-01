@@ -333,7 +333,7 @@ AvlTree<Key, Data, Compare> :: AvlTree(const AvlTree& a, const AvlTree& b) {
 
 	merge<struct element, elementCompare>(elementCompare(cmp), A, B, C, sizeA, sizeB);
 
-	buildEmptyAvl(sizeA + sizeB);
+	root = buildEmptyAvl(sizeA + sizeB);
 	arrToTree(C);
 
 	delete(C);
@@ -407,7 +407,7 @@ AvlNode<Key, Data>** AvlTree<Key, Data, Compare> :: findPtrInParent(AvlNode<Key,
 template<class Key, class Data, class Compare>
 Data& AvlTree<Key, Data, Compare> :: find(const Key& key){
 	AvlNode<Key, Data>* v = do_find(key);
-	if (cmp(*keyPtr, *v->keyPtr) == 0){
+	if (cmp(key, *v->keyPtr) == 0){
 		return *v->dataPtr;
 	}
 	throw dataStructures::dataDoesNotExist();
