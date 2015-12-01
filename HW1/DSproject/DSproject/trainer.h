@@ -3,6 +3,8 @@
 
 #include "pokemon.h"
 #include "AVL.h"
+#include "dataStructures.h"
+using namespace dataStructures;
 
 typedef enum {
 	TRA_SUCCESS, TRA_FAIL, TRA_MEM_ERR
@@ -11,7 +13,7 @@ typedef enum {
 class trainer{
 public:
 	int ID;
-	AvlTree<pokemonKey, pokemon*, compareFuncPokKey> tp_AVL;
+	AvlTree<pokemonKey, smart_pointer<pokemon>, compareFuncPokKey> tp_AVL;
 
 	trainer(int id) : ID(id), tp_AVL(pokemonLevelCompare){}
 	~trainer();

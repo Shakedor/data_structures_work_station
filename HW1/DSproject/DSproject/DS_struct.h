@@ -5,11 +5,14 @@
 #include "AVL.h"
 #include "library1.h"
 #include <new>
+#include "dataStructures.h"
+
+using namespace dataStructures;
 
 class DS_struct{
-	AvlTree<int, trainer*, compareFuncInt> t_AVL;
-	AvlTree<int, pokemon*, compareFuncInt> p_AVL;
-	AvlTree<pokemonKey, pokemon*, compareFuncPokKey> pL_AVL;
+	AvlTree<int,smart_pointer<trainer>, compareFuncInt> t_AVL;
+	AvlTree<int, smart_pointer<pokemon>, compareFuncInt> p_AVL;
+	AvlTree<pokemonKey, smart_pointer<pokemon>, compareFuncPokKey> pL_AVL;
 
 
 public:
@@ -35,7 +38,7 @@ class treeSaver{
 public:
 	int size;
 	int counter;
-	data** dataArr;
+	data* dataArr;
 
 
 	treeSaver(int size) :size(size),counter(0){

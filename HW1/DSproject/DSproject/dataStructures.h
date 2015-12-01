@@ -79,9 +79,9 @@ namespace dataStructures{
 			if (this != &sp) // avoid assigning to itself
 			{
 				//destruction protocol for old data
-				Counter->decrement;
+				Counter->decrement();
 
-				if (Counter->getNumber == 0)
+				if (Counter->getNumber() == 0)
 				{
 					delete dataPointer;
 					delete Counter;
