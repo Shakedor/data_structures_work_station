@@ -225,7 +225,7 @@ static bool testAvlJoinTrees(){
 	avl_7.printAvl();
 
 	AvlTree<keyTest, DataTest,Compare<keyTest> > avl_9(cmp);
-	for (int i=10000; i<20000 ; ++i){
+	for (int i=10000; i<11000 ; ++i){
 		INSERT(avl_9, i, -i);
 	}
 
@@ -233,6 +233,27 @@ static bool testAvlJoinTrees(){
 	avl_10.printAvl();
 	avl_9.printAvl();
 
+	AvlTree<keyTest, DataTest,Compare<keyTest> > avl_11(avl_9);
+	printf ("111\n");
+	avl_11.printAvl();
+	printf ("222\n");
+
+	AvlTree<keyTest, DataTest,Compare<keyTest> > avl_12(cmp);
+	for (int i=0; i<1 ; ++i){
+		INSERT(avl_12, i, -i);
+	}
+
+	AvlTree<keyTest, DataTest,Compare<keyTest> > avl_13(avl_12);
+	avl_13.printAvl();
+
+
+	AvlTree<keyTest, DataTest,Compare<keyTest> > avl_14(cmp);
+	for (int i=0; i<100 ; ++i){
+		INSERT(avl_14, i, -i);
+	}
+	avl_14.removeIf(Even<int>());
+	printf("Im Here\n");
+	avl_14.printAvl();
 
 
 	return result;

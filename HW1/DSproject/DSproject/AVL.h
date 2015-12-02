@@ -368,7 +368,7 @@ AvlNode<Key, Data>* AvlTree<Key, Data, Compare> :: buildEmptyFullAvl(int height)
 template<class Key, class Data, class Compare>
 AvlNode<Key, Data>* AvlTree<Key, Data, Compare> :: buildEmptyAvl(int size){
 	int internalNodes = size/2; // The number of internal nodes in a complete binary tree of n nodes is floor(n/2)
-	int fullAvlHeight = (internalNodes == 0) ? 0 : int(log2(internalNodes));
+	int fullAvlHeight = int(log2(internalNodes));
 
 	AvlNode<Key, Data>* avl = buildEmptyFullAvl(fullAvlHeight);
 
@@ -675,6 +675,7 @@ void AvlTree<Key, Data, Compare> :: removeIf(Condition condition){ //Removes all
 	root = newRoot;
 
 	arrToTree(newArr, newSize); // Must come in this order
+	treeSize = newSize;
 
 	destroyTree(oldRoot);
 	delete[](newArr);
@@ -732,7 +733,7 @@ AvlNode<Key, Data>* AvlTree<Key, Data, Compare> :: roll_RL(AvlNode<Key, Data>* v
 
 template<class Key, class Data, class Compare>
 template<class Operation>
-void AvlTree<Key, Data, Compare> :: orderRecursion(AvlNode<Key, Data>* v, Operation& op,
+void AvlTree<Key, Data, Compare> :: orderRecursionHelper(AvlNode<Key, Data>* v, Operation& op,
 		traversalOrder order){
 	if (!v){
 		return;
@@ -742,6 +743,13 @@ void AvlTree<Key, Data, Compare> :: orderRecursion(AvlNode<Key, Data>* v, Operat
 	if (order == inOrder) {op(v);}
 	orderRecursionHelper(v->right, op, order);
 	if (order == postOrder) {op(v);}
+}
+
+template<class Key, class Data, class Compare>
+template<class Operation>
+void AvlTree<Key, Data, Compare> :: orderRecursion(AvlNode<Key, Data>* v, Operation& op,
+		traversalOrder order){
+	orderRecursionHelper(v, op, order);
 }
 
 template<class Key, class Data, class Compare>
@@ -759,11 +767,12 @@ void AvlTree<Key, Data, Compare> :: orderRecursionHelper(AvlNode<Key, Data>* v, 
 }
 
 
+
 template<class Key, class Data, class Compare>
 template<class Operation>
 void AvlTree<Key, Data, Compare> :: orderRecursion(AvlNode<Key, Data>* v, Operation op,
-		traversalOrder order) const{
-	orderRecursionHelper(v, op, order);
+		traversalOrder order) const{	orderRecursionHelper(v, op, order);
+
 }
 
 template<class Key, class Data, class Operation>
@@ -811,5 +820,6 @@ template<class Key, class Data, class Compare>
 void AvlTree<Key, Data, Compare> :: printAvl(){
 	printAvlRecursive(root, 0);
 }
+
 
 #endif /* AVL_H_ */
