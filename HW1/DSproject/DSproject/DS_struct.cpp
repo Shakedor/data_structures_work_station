@@ -176,8 +176,8 @@ void DS_struct::GetAllPokemonsByLevel(int trainerID, int **pokemons, int* numOfP
 	//get size of MAVL tree from either DS_struct or appropriate trainer
 	int treeSize = correctTree.get_size();
 	// preform an postorder walk on the appropriate MAVL tree, saving each pokemon to an arrray 
-	treeSaver<pokemonKey,smart_pointer<pokemon>> pokemonArr = treeSaver<pokemonKey,smart_pointer<pokemon>>(treeSize);
-	pL_AVL.postorder(pokemonArr);
+	treeSaver<pokemonKey,smart_pointer<pokemon>> pokemonArr(treeSize);
+	pL_AVL.inorder(pokemonArr);
 
 	// malloc an array of such ints. // if failed return allocation error
 	int* IDArr =(int*)malloc(sizeof(int)*treeSize);
@@ -186,7 +186,7 @@ void DS_struct::GetAllPokemonsByLevel(int trainerID, int **pokemons, int* numOfP
 	}
 
 	for (int i = 0; i < pokemonArr.size; i++){
-		smart_pointer<pokemon> currpokemon = *pokemonArr.dataArr[i];
+		smart_pointer<pokemon> currpokemon = *(pokemonArr.dataArr[i]);
 		IDArr[i] = currpokemon->pokemon_ID;
 	}
 
@@ -242,7 +242,7 @@ void DS_struct::UpdateLevels( int stoneCode, int stoneFactor){
 	}
 
 	//make array of trainers
-	int trainerNum;
+	int trainerNum=t_AVL.get_size();
 	treeSaver<int,smart_pointer<trainer>> trainerArr=treeSaver<int,smart_pointer<trainer>>(trainerNum);
 	t_AVL.postorder(trainerArr);
 	

@@ -46,9 +46,9 @@ public:
 		dataArr = new data*[size];
 		keyArr = new key*[size];
 	}
-	void operator() (key newKey,data newdata){
-		if (counter <= size){
-			throw(dataStructures::sizeOverFlow&);
+	void operator() (key& newKey,data& newdata){
+		if (counter >= size){
+			throw dataStructures::sizeOverFlow();
 		}
 		else{
 			dataArr[counter] = &newdata;
@@ -70,8 +70,8 @@ public:
 
 	isStoneCode(int code, bool val) : stoneCode(code), retVal(val){}
 	
-	bool operator() (pokemon* thisPokemon){
-		if (thisPokemon->pokemon_ID%stoneCode == 0){
+	bool operator() (pokemonKey key, smart_pointer<pokemon> thisPokemon) const{
+		if ((thisPokemon->pokemon_ID)%stoneCode == 0){
 			return retVal;
 		}
 		return !retVal;
