@@ -1,0 +1,193 @@
+MY TEST:
+
+Pokemon 0   :   ID = 46
+Pokemon 1   :   ID = 93
+Pokemon 2   :   ID = 94
+Pokemon 3   :   ID = 1
+Pokemon 4   :   ID = 2
+Pokemon 5   :   ID = 3
+Pokemon 6   :   ID = 4
+Pokemon 7   :   ID = 5
+Pokemon 8   :   ID = 1120
+Pokemon 9   :   ID = 6
+Pokemon 10   :   ID = 1119
+Pokemon 11   :   ID = 7
+Pokemon 12   :   ID = 1118
+Pokemon 13   :   ID = 8
+Pokemon 14   :   ID = 1117
+Pokemon 15   :   ID = 9
+Pokemon 16   :   ID = 1116
+Pokemon 17   :   ID = 10
+Pokemon 18   :   ID = 1115
+Pokemon 19   :   ID = 1114
+Pokemon 20   :   ID = 1113
+Pokemon 21   :   ID = 1112
+Pokemon 22   :   ID = 1111
+Pokemon 23   :   ID = 19
+END
+Pokemon 0   :   ID = 46
+Pokemon 1   :   ID = 93
+Pokemon 2   :   ID = 94
+Pokemon 3   :   ID = 1
+Pokemon 4   :   ID = 2
+Pokemon 5   :   ID = 3
+Pokemon 6   :   ID = 4
+Pokemon 7   :   ID = 5
+Pokemon 8   :   ID = 6
+Pokemon 9   :   ID = 7
+Pokemon 10   :   ID = 8
+Pokemon 11   :   ID = 9
+Pokemon 12   :   ID = 10
+Pokemon 13   :   ID = 19
+END
+Pokemon 0   :   ID = 1111
+Pokemon 1   :   ID = 1112
+Pokemon 2   :   ID = 1113
+Pokemon 3   :   ID = 1114
+Pokemon 4   :   ID = 1115
+Pokemon 5   :   ID = 1116
+Pokemon 6   :   ID = 1117
+Pokemon 7   :   ID = 1118
+Pokemon 8   :   ID = 1119
+Pokemon 9   :   ID = 1120
+Pokemon 10   :   ID = 46
+Pokemon 11   :   ID = 93
+Pokemon 12   :   ID = 94
+Pokemon 13   :   ID = 1
+Pokemon 14   :   ID = 2
+Pokemon 15   :   ID = 3
+Pokemon 16   :   ID = 4
+Pokemon 17   :   ID = 5
+Pokemon 18   :   ID = 6
+Pokemon 19   :   ID = 7
+Pokemon 20   :   ID = 8
+Pokemon 21   :   ID = 9
+Pokemon 22   :   ID = 10
+Pokemon 23   :   ID = 19
+END
+top pokimon of trainer 40 is   :   1120
+top pokimon of trainer 41 is   :   1119
+top pokimon of trainer 42 is   :   1118
+top pokimon of trainer 43 is   :   1117
+top pokimon of trainer 44 is   :   1116
+top pokimon of trainer 45 is   :   1115
+top pokimon of trainer 46 is   :   1114
+top pokimon of trainer 47 is   :   1113
+top pokimon of trainer 48 is   :   1112
+top pokimon of trainer 49 is   :   1111
+Pokemon 0   :   ID = 46
+Pokemon 1   :   ID = 93
+Pokemon 2   :   ID = 94
+Pokemon 3   :   ID = 1
+Pokemon 4   :   ID = 2
+Pokemon 5   :   ID = 3
+Pokemon 6   :   ID = 4
+Pokemon 7   :   ID = 5
+Pokemon 8   :   ID = 6
+Pokemon 9   :   ID = 7
+Pokemon 10   :   ID = 8
+Pokemon 11   :   ID = 9
+Pokemon 12   :   ID = 10
+Pokemon 13   :   ID = 19
+Pokemon 14   :   ID = 1111
+Pokemon 15   :   ID = 1112
+Pokemon 16   :   ID = 1113
+Pokemon 17   :   ID = 1114
+Pokemon 18   :   ID = 1115
+Pokemon 19   :   ID = 1116
+Pokemon 20   :   ID = 1117
+Pokemon 21   :   ID = 1118
+Pokemon 22   :   ID = 1119
+Pokemon 23   :   ID = 1120
+END
+top pokimon of trainer 40 is   :   1
+top pokimon of trainer 41 is   :   2
+top pokimon of trainer 42 is   :   3
+top pokimon of trainer 43 is   :   4
+top pokimon of trainer 44 is   :   5
+top pokimon of trainer 45 is   :   6
+top pokimon of trainer 46 is   :   7
+top pokimon of trainer 47 is   :   46
+top pokimon of trainer 48 is   :   9
+top pokimon of trainer 49 is   :   10
+Pokemon 0   :   ID = 19
+Pokemon 1   :   ID = 21
+Pokemon 2   :   ID = 28
+Pokemon 3   :   ID = 27
+Pokemon 4   :   ID = 865
+Pokemon 5   :   ID = 26
+Pokemon 6   :   ID = 101
+Pokemon 7   :   ID = 1000
+Pokemon 8   :   ID = 25
+Pokemon 9   :   ID = 24
+Pokemon 10   :   ID = 888
+Pokemon 11   :   ID = 23
+Pokemon 12   :   ID = 22
+Pokemon 13   :   ID = 3
+Pokemon 14   :   ID = 64
+Pokemon 15   :   ID = 1
+Pokemon 16   :   ID = 97
+END
+Pokemon 0   :   ID = 19
+Pokemon 1   :   ID = 21
+Pokemon 2   :   ID = 28
+Pokemon 3   :   ID = 27
+Pokemon 4   :   ID = 865
+Pokemon 5   :   ID = 26
+Pokemon 6   :   ID = 101
+Pokemon 7   :   ID = 1000
+Pokemon 8   :   ID = 25
+Pokemon 9   :   ID = 24
+Pokemon 10   :   ID = 888
+Pokemon 11   :   ID = 23
+Pokemon 12   :   ID = 22
+Pokemon 13   :   ID = 3
+Pokemon 14   :   ID = 64
+Pokemon 15   :   ID = 1
+Pokemon 16   :   ID = 97
+END
+Pokemon 0   :   ID = 19
+Pokemon 1   :   ID = 28
+Pokemon 2   :   ID = 26
+Pokemon 3   :   ID = 1000
+Pokemon 4   :   ID = 21
+Pokemon 5   :   ID = 24
+Pokemon 6   :   ID = 888
+Pokemon 7   :   ID = 22
+Pokemon 8   :   ID = 27
+Pokemon 9   :   ID = 865
+Pokemon 10   :   ID = 101
+Pokemon 11   :   ID = 25
+Pokemon 12   :   ID = 64
+Pokemon 13   :   ID = 23
+Pokemon 14   :   ID = 3
+Pokemon 15   :   ID = 1
+Pokemon 16   :   ID = 97
+END
+Pokemon 0   :   ID = 19
+Pokemon 1   :   ID = 28
+Pokemon 2   :   ID = 26
+Pokemon 3   :   ID = 1000
+Pokemon 4   :   ID = 21
+Pokemon 5   :   ID = 24
+Pokemon 6   :   ID = 888
+Pokemon 7   :   ID = 22
+Pokemon 8   :   ID = 27
+Pokemon 9   :   ID = 865
+Pokemon 10   :   ID = 101
+Pokemon 11   :   ID = 25
+Pokemon 12   :   ID = 64
+Pokemon 13   :   ID = 23
+Pokemon 14   :   ID = 3
+Pokemon 15   :   ID = 1
+Pokemon 16   :   ID = 97
+END
+top pokimon of trainer 1 is   :   22
+top pokimon of trainer 2 is   :   23
+top pokimon of trainer 3 is   :   1000
+top pokimon of trainer 4 is   :   865
+top pokimon of trainer 5 is   :   19
+top pokimon of trainer 6 is   :   27
+top pokimon of trainer 7 is   :   28
+
+SUCCESS

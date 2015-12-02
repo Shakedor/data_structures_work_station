@@ -33,27 +33,32 @@ public:
 
 };
 
-template<class data>
+template<class key,class data>
 class treeSaver{
 public:
 	int size;
 	int counter;
-	data* dataArr;
+	data** dataArr;
+	key** keyArr;
 
 
 	treeSaver(int size) :size(size),counter(0){
-		dataArr = new data[size];
+		dataArr = new data*[size];
+		keyArr = new key*[size];
 	}
-	void operator() (data* newdata){
+	void operator() (key newKey,data newdata){
 		if (counter <= size){
 			throw(dataStructures::sizeOverFlow&);
 		}
 		else{
-			dataArr[counter] = newdata;
+			dataArr[counter] = &newdata;
+			keyArr[counter] = &newKey;
 		}
+		counter++;
 	}
 	~treeSaver(){
 		delete[] dataArr;
+		delete[] keyArr;
 	}
 
 };
@@ -71,6 +76,30 @@ public:
 		}
 		return !retVal;
 	}
+};
+
+class stoneCodeKeyUpdate{
+public:
+	int stoneFactor;
+
+	stoneCodeKeyUpdate(int factor) :stoneFactor(factor){}
+
+	void operator() (pokemonKey key, smart_pointer<pokemon> pokData){
+		key.level *= stoneFactor;
+	}
+
+};
+
+class stoneCodePokemonUpdate{
+public:
+	int stoneFactor;
+
+	stoneCodePokemonUpdate(int factor) :stoneFactor(factor){}
+
+	void operator() (pokemonKey key, smart_pointer<pokemon> pokData){
+		pokData->level *= stoneFactor;
+	}
+
 };
 
 #endif // !DS_struct_H

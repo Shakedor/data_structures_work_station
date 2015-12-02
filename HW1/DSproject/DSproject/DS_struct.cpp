@@ -154,18 +154,49 @@ void DS_struct::GetTopPokemon(int trainerID, int *pokemonID){
 
 void DS_struct::GetAllPokemonsByLevel(int trainerID, int **pokemons, int* numOfPokemon){
 	//if pointer = null or trainer id =0 return invalid input
-
-	//if trainer id >0 and not exist return failure
+	if (numOfPokemon == NULL || pokemons == NULL || trainerID == 0){
+		throw DS_struct::InvalidInput();
+	}
+	AvlTree<pokemonKey, smart_pointer<pokemon>, compareFuncPokKey>& correctTree= pL_AVL;// will contain the whole DS pokemon tree unless trainer ID >0 and is found
+	smart_pointer<trainer> myTrainer;
+	
+	//if trainer id >0 and not exist throw failure 
+	if (trainerID > 0){
+		try{
+			myTrainer=t_AVL.find(trainerID);
+		}
+		catch (dataStructures::dataDoesNotExist&){
+			throw dataStructures::failureExceptions();
+		}
+		catch(...){
+			assert(0);
+		}
+	}
 
 	//get size of MAVL tree from either DS_struct or appropriate trainer
+	int treeSize = correctTree.get_size();
+	// preform an postorder walk on the appropriate MAVL tree, saving each pokemon to an arrray 
+	treeSaver<pokemonKey,smart_pointer<pokemon>> pokemonArr = treeSaver<pokemonKey,smart_pointer<pokemon>>(treeSize);
+	pL_AVL.postorder(pokemonArr);
 
 	// malloc an array of such ints. // if failed return allocation error
-	// preform an postorder walk on the appropriate MAVL tree, for each pokemon put its id in the index
+	int* IDArr =(int*)malloc(sizeof(int)*treeSize);
+	if (IDArr == NULL){
+		throw std::bad_alloc();
+	}
+
+	for (int i = 0; i < pokemonArr.size; i++){
+		smart_pointer<pokemon> currpokemon = *pokemonArr.dataArr[i];
+		IDArr[i] = currpokemon->pokemon_ID;
+	}
 
 	//put number of pokemon in  pointer and the array of iDS_struct in the array pointer
-
+	*numOfPokemon = treeSize;
+	*pokemons = IDArr;
 	//return success
+
 }
+
 void DS_struct::EvolvePokemon(int pokemonID, int evolvedID){
 	// if either id <=0 throw invalid input
 	if (pokemonID <= 0 || evolvedID <= 0){
@@ -206,18 +237,58 @@ void DS_struct::EvolvePokemon(int pokemonID, int evolvedID){
 
 void DS_struct::UpdateLevels( int stoneCode, int stoneFactor){
 	//if code or factor <1 return invalid input
-	// make an array of trainers
-	//for each trainer, preform 2 conditional walks of pokemons according to is stonde code function
-	// destroying the tree after warDS_struct
-	// so 4 arrays of total size 2n_trainer for each trainer
-	// each 2 walks (for condition true and false) reconstruct to an avl tree
+	if (stoneCode <= 1 || stoneFactor <= 1){
+		throw InvalidInput();
+	}
 
-	// make the same conditional walks for the p_MAVL
-	// for every poemon in true condition, multiply its level by stone factor.
-	//then build back the p_mavl true and false conditions trees.
+	//make array of trainers
+	int trainerNum;
+	treeSaver<int,smart_pointer<trainer>> trainerArr=treeSaver<int,smart_pointer<trainer>>(trainerNum);
+	t_AVL.postorder(trainerArr);
+	
+	isStoneCode trueStone = isStoneCode(stoneCode, true);
+	isStoneCode falseStone = isStoneCode(stoneCode, false);
+	stoneCodeKeyUpdate keyUpdate = stoneCodeKeyUpdate(stoneFactor);
+	stoneCodePokemonUpdate pokemonUpdate = stoneCodePokemonUpdate(stoneFactor);
 
-	// now for each false and true tree pair, merge the trees
-	// and allocate them back to their place.
+	// for each trainer
+	for (int i = 0; i < trainerNum; i++){
+		smart_pointer<trainer> currentTrainer = *trainerArr.dataArr[i];
+		// copy its pokemon tree twice
+		AvlTree<pokemonKey, smart_pointer<pokemon>, compareFuncPokKey> posTree(currentTrainer->tp_AVL);
+		AvlTree<pokemonKey, smart_pointer<pokemon>, compareFuncPokKey> negTree(currentTrainer->tp_AVL);
+
+		//filter trees based on stone code / not sotne code
+
+		posTree.removeIf(falseStone);
+		negTree.removeIf(trueStone);
+
+		// do stone code update operation on each key
+		posTree.postorder(keyUpdate);
+		// merge trees
+		// store them as trainer's tree
+		currentTrainer->tp_AVL = AvlTree<pokemonKey, smart_pointer<pokemon>, compareFuncPokKey>(posTree, negTree);
+
+	}
+
+
+	//then do the same for the big pl_AVL but also change the pokemon
+
+	// copy its pokemon tree twice
+	AvlTree<pokemonKey, smart_pointer<pokemon>, compareFuncPokKey> posTree(pL_AVL);
+	AvlTree<pokemonKey, smart_pointer<pokemon>, compareFuncPokKey> negTree(pL_AVL);
+
+	//filter trees based on stone code / not sotne code
+
+	posTree.removeIf(falseStone);
+	negTree.removeIf(trueStone);
+
+	// do stone code update operation on each key ***and DATA only this one time***
+	posTree.postorder(keyUpdate);
+	posTree.postorder(pokemonUpdate);
+	// merge trees
+	// store them as trainer's tree
+	pL_AVL =AvlTree<pokemonKey, smart_pointer<pokemon>, compareFuncPokKey>(posTree, negTree);
 
 
 }
