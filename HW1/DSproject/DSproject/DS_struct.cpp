@@ -117,6 +117,7 @@ void DS_struct::GetTopPokemon(int trainerID, int *pokemonID){
 	}
 	*pokemonID = -1; // deafult value
 	smart_pointer<pokemon> topPokemon = NULL;
+	bool pokemonExistFlag = true;
 
 	// if id <0 get top pokemon id from pL_AVL
 	if (trainerID < 0){
@@ -124,7 +125,7 @@ void DS_struct::GetTopPokemon(int trainerID, int *pokemonID){
 			topPokemon = pL_AVL.get_max(); 
 		}
 		catch (dataStructures::dataDoesNotExist&){
-			;
+			pokemonExistFlag = false;
 		}
 		catch (...){
 			assert(0);
@@ -140,7 +141,7 @@ void DS_struct::GetTopPokemon(int trainerID, int *pokemonID){
 			topPokemon = myTrainer->tp_AVL.get_max();
 		}
 		catch (dataStructures::dataDoesNotExist&){
-			;
+			pokemonExistFlag = false;
 		}
 		catch (...){
 			assert(0);
@@ -148,7 +149,10 @@ void DS_struct::GetTopPokemon(int trainerID, int *pokemonID){
 	}
 
 	//if exist get its top pokemon id
-	*pokemonID = topPokemon->pokemon_ID;
+	if (pokemonExistFlag){
+		*pokemonID = topPokemon->pokemon_ID;
+	}
+	
 
 }
 
@@ -157,13 +161,14 @@ void DS_struct::GetAllPokemonsByLevel(int trainerID, int **pokemons, int* numOfP
 	if (numOfPokemon == NULL || pokemons == NULL || trainerID == 0){
 		throw DS_struct::InvalidInput();
 	}
-	AvlTree<pokemonKey, smart_pointer<pokemon>, compareFuncPokKey>& correctTree= pL_AVL;// will contain the whole DS pokemon tree unless trainer ID >0 and is found
+	AvlTree<pokemonKey, smart_pointer<pokemon>, compareFuncPokKey>* correctTree= &pL_AVL;// will contain the whole DS pokemon tree unless trainer ID >0 and is found
 	smart_pointer<trainer> myTrainer;
 	
 	//if trainer id >0 and not exist throw failure 
 	if (trainerID > 0){
 		try{
 			myTrainer=t_AVL.find(trainerID);
+			correctTree = &(myTrainer->tp_AVL);
 		}
 		catch (dataStructures::dataDoesNotExist&){
 			throw dataStructures::failureExceptions();
@@ -174,10 +179,10 @@ void DS_struct::GetAllPokemonsByLevel(int trainerID, int **pokemons, int* numOfP
 	}
 
 	//get size of MAVL tree from either DS_struct or appropriate trainer
-	int treeSize = correctTree.get_size();
+	int treeSize = correctTree->get_size();
 	// preform an postorder walk on the appropriate MAVL tree, saving each pokemon to an arrray 
 	treeSaver<pokemonKey,smart_pointer<pokemon>> pokemonArr(treeSize);
-	pL_AVL.inorder(pokemonArr);
+	correctTree->inorder(pokemonArr);
 
 	// malloc an array of such ints. // if failed return allocation error
 	int* IDArr =(int*)malloc(sizeof(int)*treeSize);

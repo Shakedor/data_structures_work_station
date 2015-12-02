@@ -1,0 +1,35 @@
+Init done.
+AddTrainer: SUCCESS
+AddTrainer: SUCCESS
+CatchPokemon: SUCCESS
+AddTrainer: SUCCESS
+CatchPokemon: FAILURE
+CatchPokemon: SUCCESS
+Pokemon with highest level is: 101
+LevelUp: SUCCESS
+Level	||	Pokemon
+1	||	102
+2	||	101
+and there are no more pokemons!
+FreePokemon: SUCCESS
+Level	||	Pokemon
+1	||	101
+and there are no more pokemons!
+Pokemon with highest level is: -1
+EvolvePokemon: SUCCESS
+Pokemon with highest level is: 105
+EvolvePokemon: SUCCESS
+CatchPokemon: SUCCESS
+CatchPokemon: SUCCESS
+Level	||	Pokemon
+1	||	101
+2	||	120
+3	||	105
+and there are no more pokemons!
+Level	||	Pokemon
+1	||	101
+2	||	105
+and there are no more pokemons!
+Level	||	Pokemon
+1	||	120
+and there are no more pokemons!
