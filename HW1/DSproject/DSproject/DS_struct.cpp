@@ -269,7 +269,7 @@ void DS_struct::UpdateLevels( int stoneCode, int stoneFactor){
 		negTree.removeIf(trueStone);
 
 		// do stone code update operation on each key
-		posTree.postorder(keyUpdate);
+		posTree.inorder(keyUpdate);
 		// merge trees
 		// store them as trainer's tree
 		currentTrainer->tp_AVL = AvlTree<pokemonKey, smart_pointer<pokemon>, compareFuncPokKey>(posTree, negTree);

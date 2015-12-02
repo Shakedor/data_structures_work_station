@@ -70,7 +70,7 @@ public:
 
 	isStoneCode(int code, bool val) : stoneCode(code), retVal(val){}
 	
-	bool operator() (pokemonKey key, smart_pointer<pokemon> thisPokemon) const{
+	bool operator() (pokemonKey& key, smart_pointer<pokemon>& thisPokemon) const{
 		if ((thisPokemon->pokemon_ID)%stoneCode == 0){
 			return retVal;
 		}
@@ -84,7 +84,7 @@ public:
 
 	stoneCodeKeyUpdate(int factor) :stoneFactor(factor){}
 
-	void operator() (pokemonKey key, smart_pointer<pokemon> pokData){
+	void operator() (pokemonKey& key, smart_pointer<pokemon>& pokData){
 		key.level *= stoneFactor;
 	}
 
@@ -96,7 +96,7 @@ public:
 
 	stoneCodePokemonUpdate(int factor) :stoneFactor(factor){}
 
-	void operator() (pokemonKey key, smart_pointer<pokemon> pokData){
+	void operator() (pokemonKey& key, smart_pointer<pokemon>& pokData){
 		pokData->level *= stoneFactor;
 	}
 
