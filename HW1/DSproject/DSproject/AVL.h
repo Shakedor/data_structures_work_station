@@ -812,5 +812,4 @@ void AvlTree<Key, Data, Compare> :: printAvl(){
 	printAvlRecursive(root, 0);
 }
 
-
 #endif /* AVL_H_ */
