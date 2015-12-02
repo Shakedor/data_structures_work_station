@@ -368,7 +368,7 @@ AvlNode<Key, Data>* AvlTree<Key, Data, Compare> :: buildEmptyFullAvl(int height)
 template<class Key, class Data, class Compare>
 AvlNode<Key, Data>* AvlTree<Key, Data, Compare> :: buildEmptyAvl(int size){
 	int internalNodes = size/2; // The number of internal nodes in a complete binary tree of n nodes is floor(n/2)
-	int fullAvlHeight = int(log2(internalNodes));
+	int fullAvlHeight = (internalNodes == 0) ? 0 : int(log2(internalNodes));
 
 	AvlNode<Key, Data>* avl = buildEmptyFullAvl(fullAvlHeight);
 
