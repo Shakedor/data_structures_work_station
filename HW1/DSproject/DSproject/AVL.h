@@ -103,6 +103,7 @@ public:
 	AvlTree(const Compare& Cmp) : cmp(Cmp), treeSize(0), root(NULL), max_node(NULL){}
 	AvlTree(const AvlTree& a, const AvlTree& b); // O(max(a.treeSize, b.treeSize))
 	AvlTree(const AvlTree&); // O(treeSize)
+	void operator= (const AvlTree&);
 
 	~AvlTree(){
 		destroyTree(root);
@@ -117,9 +118,9 @@ public:
 	int get_size() const;
 
 	// Calls op(data) for every object.
-	template<class Operation> void preorder(Operation op); // op(key,data)
-	template<class Operation> void inorder(Operation op);
-	template<class Operation> void postorder(Operation op);
+	template<class Operation> void preorder(Operation& op); // op(key,data)
+	template<class Operation> void inorder(Operation& op);
+	template<class Operation> void postorder(Operation& op);
 
 	void printAvlRecursive(AvlNode<Key, Data>* v, int depth);
 	void printAvl();
@@ -158,7 +159,7 @@ private:
 	};
 
 	template<class Operation> void orderRecursionHelper(AvlNode<Key, Data>*, Operation&, traversalOrder);
-	template<class Operation> void orderRecursion(AvlNode<Key, Data>*, Operation, traversalOrder);
+	template<class Operation> void orderRecursion(AvlNode<Key, Data>*, Operation&, traversalOrder);
 	template<class Operation> void orderRecursionHelper(AvlNode<Key, Data>*, Operation&, traversalOrder) const;
 	template<class Operation> void orderRecursion(AvlNode<Key, Data>*, Operation, traversalOrder) const;
 
@@ -251,15 +252,27 @@ AvlNode<Key, Data>* AvlNode<Key, Data> :: rotate_left(){
 template<class Key, class Data, class Compare>
 AvlTree<Key, Data, Compare> ::AvlTree(const AvlTree& source) : 	cmp(source.cmp),
 	treeSize(source.treeSize), root(NULL), max_node(NULL){
+	this->operator=(source);
+}
 
+/////////////////////////////////////////
+/////	AvlTree assignment operator	/////
+/////////////////////////////////////////
+
+template<class Key, class Data, class Compare>
+void AvlTree<Key, Data, Compare> :: operator= (const AvlTree& other){
+	destroyTree(root);
+	treeSize = other.treeSize;
 	root = buildEmptyAvl(treeSize);
+
 	Element tmp = new struct element[treeSize];
-	source.treeToArr(tmp);
+	other.treeToArr(tmp);
 	arrToTree(tmp, treeSize);
 	delete[](tmp);
 
 	updateMaxNode();
 }
+
 
 /////////////////////
 ///// treeToArr	/////
@@ -719,7 +732,7 @@ AvlNode<Key, Data>* AvlTree<Key, Data, Compare> :: roll_RL(AvlNode<Key, Data>* v
 
 template<class Key, class Data, class Compare>
 template<class Operation>
-void AvlTree<Key, Data, Compare> :: orderRecursionHelper(AvlNode<Key, Data>* v, Operation& op,
+void AvlTree<Key, Data, Compare> :: orderRecursion(AvlNode<Key, Data>* v, Operation& op,
 		traversalOrder order){
 	if (!v){
 		return;
@@ -729,13 +742,6 @@ void AvlTree<Key, Data, Compare> :: orderRecursionHelper(AvlNode<Key, Data>* v, 
 	if (order == inOrder) {op(v);}
 	orderRecursionHelper(v->right, op, order);
 	if (order == postOrder) {op(v);}
-}
-
-template<class Key, class Data, class Compare>
-template<class Operation>
-void AvlTree<Key, Data, Compare> :: orderRecursion(AvlNode<Key, Data>* v, Operation op,
-		traversalOrder order){
-	orderRecursionHelper(v, op, order);
 }
 
 template<class Key, class Data, class Compare>
@@ -772,24 +778,21 @@ public:
 
 template<class Key, class Data, class Compare>
 template<class Operation>
-void AvlTree<Key, Data, Compare> :: preorder(Operation op){
+void AvlTree<Key, Data, Compare> :: preorder(Operation& op){
 	orderRecursion(root, NodeOperation<Key, Data, Operation>(op), preOrder);
 }
 
 template<class Key, class Data, class Compare>
 template<class Operation>
-void AvlTree<Key, Data, Compare> :: inorder(Operation op){
+void AvlTree<Key, Data, Compare> :: inorder(Operation& op){
 	orderRecursion(root, NodeOperation<Key, Data, Operation>(op), inOrder);
 }
 
 template<class Key, class Data, class Compare>
 template<class Operation>
-void AvlTree<Key, Data, Compare> :: postorder(Operation op){
+void AvlTree<Key, Data, Compare> :: postorder(Operation& op){
 	orderRecursion(root, NodeOperation<Key, Data, Operation>(op), postOrder);
 }
-
-
-
 
 template<class Key, class Data, class Compare>
 void AvlTree<Key, Data, Compare> :: printAvlRecursive(AvlNode<Key, Data>* v, int depth){
