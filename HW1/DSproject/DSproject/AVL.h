@@ -7,9 +7,7 @@
 #include "dataStructures.h"
 #include <iostream>	//TODO: REMOVE
 #include <cmath>
-#include "pokemon.h"
 #include "dataStructures.h"
-using namespace dataStructures;
 
 template<class T>
 const T& max(const T& a, const T& b){
@@ -128,6 +126,8 @@ public:
 
 	template<class printKey, class printData> void printAvlRecursive(AvlNode<Key, Data>* v, int depth, printKey&, printData&);
 	template<class printKey, class printData> void printAvl(printKey&, printData&);
+	void printAvlRecursiveInt(AvlNode<Key, Data>* v, int depth);
+	void printAvlInt();
 
 	typedef struct element{
 		Key* keyPtr;
@@ -146,7 +146,7 @@ private:
 	AvlNode<Key, Data>* doInsert(const Key& key, const Data& data);
 	AvlNode<Key, Data>* findSuccessor(AvlNode<Key, Data>* v);
 	void setNodes(AvlNode<Key, Data>* vNew, AvlNode<Key, Data>* vOld);
-	AvlNode<Key, Data>* doRemove(AvlNode<Key, Data>*);
+	void doRemove(AvlNode<Key, Data>*);
 	void fixPath(AvlNode<Key, Data>* v);
 
 	AvlNode<Key, Data>* do_find(const Key& key) const;
@@ -616,9 +616,11 @@ void AvlTree<Key, Data, Compare> ::setNodes(AvlNode<Key, Data>* vNew, AvlNode<Ke
 	vNew->set_parent(vOld->parent, findPtrInParent(vOld));
 }
 
-template<class Key, class Data, class Compare>
-AvlNode<Key, Data>* AvlTree<Key, Data, Compare> ::doRemove(AvlNode<Key, Data>* v){
 
+
+//Returns new root
+template<class Key, class Data, class Compare>
+void AvlTree<Key, Data, Compare> ::doRemove(AvlNode<Key, Data>* v){
 
 	int sons = getNumOfSons(v);
 
@@ -627,23 +629,36 @@ AvlNode<Key, Data>* AvlTree<Key, Data, Compare> ::doRemove(AvlNode<Key, Data>* v
 	// parent balance factor is other son - 0
 	// start rolling from parent
 	if (sons == 0){
-		*(findPtrInParent(v)) = NULL;
-		AvlNode<Key, Data>* parent = v->parent;
-		fixPath(parent);
-		return v;
+		if (v != root){
+			*(findPtrInParent(v)) = NULL;
+			AvlNode<Key, Data>* parent = v->parent;
+			fixPath(parent);
+			delete(v);
+			return;
+		} else{ //v == root
+			delete(v);
+			root = NULL;
+			return;
+		}
+
 	}
 
 	// if has 1 son
 	// connect its parent with its only son
 	// parent bf is new son height - old son heght (could be zero)
-	// start rollign from parent
+	// start rolling from parent
 	else if (sons == 1){
 		AvlNode<Key, Data>* onlySon = v->left ? v->left : v->right;
-		*(findPtrInParent(v)) = onlySon;
-		onlySon->parent = v->parent;
-		fixPath(v->parent);
+		if (v != root){
+			*(findPtrInParent(v)) = onlySon;
+			onlySon->parent = v->parent;
+			fixPath(v->parent);
+			delete(v);
+			return;
+		}
 		root = onlySon;
-		return v;
+		delete(v);
+		return;
 	}
 
 
@@ -653,10 +668,32 @@ AvlNode<Key, Data>* AvlTree<Key, Data, Compare> ::doRemove(AvlNode<Key, Data>* v
 	//connect successor 2 both sons and the parent (end case successor could be a son)
 	else {
 		AvlNode<Key, Data>* succesor = findSuccessor(v);
-		AvlNode<Key, Data>* removed = doRemove(succesor);
-		assert(removed == succesor);
-		setNodes(succesor, v);
-		return v;
+		int succesorSons = getNumOfSons(succesor);
+		if (succesorSons == 0){
+			AvlNode<Key, Data>* tmpParent = succesor->parent;
+			succesor->parent = NULL;
+			*findPtrInParent(succesor) = NULL;
+			fixPath(tmpParent);
+			setNodes(succesor, v);
+
+			if (v == root){
+				root = succesor;
+			}
+			delete(v);
+		} else if (succesorSons == 1){
+			AvlNode<Key, Data>* tmpParent = succesor->parent;
+			assert(succesor->left && !succesor->right);
+			AvlNode<Key, Data>* tmpSon = succesor->left;
+
+			*findPtrInParent(succesor) = tmpSon;
+			tmpSon = tmpParent;
+			fixPath(tmpParent);
+			setNodes(succesor, v);
+			if (v == root){
+				root = succesor;
+			}
+			delete(v);
+		}
 	}
 
 	// if has 2 son and successor has 1 son
@@ -664,7 +701,7 @@ AvlNode<Key, Data>* AvlTree<Key, Data, Compare> ::doRemove(AvlNode<Key, Data>* v
 	//recursivly remove successor (but save him)
 	//swithc successor with original node to be removed
 
-	assert(0);
+
 }
 
 template<class Key, class Data, class Compare>
@@ -678,17 +715,6 @@ void AvlTree<Key, Data, Compare> :: remove(const Key& key){
 		}
 		
 		doRemove(v);
-		//Updates root
-		root = v;
-		while (root->parent){
-			root = root->parent;
-		}
-		if (root==v){
-			root = NULL;
-		}
-		else{
-			delete(v);
-		}
 	}
 	--treeSize;
 	updateMaxNode();
@@ -883,7 +909,7 @@ template<class Operation>
 void AvlTree<Key, Data, Compare> :: postorder(Operation& op){
 	orderRecursion(root, NodeOperation<Key, Data, Operation>(op), postOrder);
 }
-
+/*
 template<class Key, class Data, class Compare>
 template<class printKey, class printData>
 void AvlTree<Key, Data, Compare> ::printAvlRecursive(AvlNode<Key, Data>* v, int depth, printKey& printK, printData& printD){
@@ -904,12 +930,32 @@ void AvlTree<Key, Data, Compare> ::printAvlRecursive(AvlNode<Key, Data>* v, int 
 	}
 	printAvlRecursive(v->left, depth + 1, printK, printD);
 }
+*/
+
+
 
 template<class Key, class Data, class Compare>
-template<class printKey, class printData>
-void AvlTree<Key, Data, Compare> ::printAvl(printKey& printK, printData& printD){
-	printAvlRecursive(root, 0, printK, printD);
+void AvlTree<Key, Data, Compare> :: printAvlRecursiveInt(AvlNode<Key, Data>* v, int depth){
+	if (!v){
+		return;
+	}
+	printAvlRecursiveInt(v->right, depth+1);
+	for (int i=0 ; i < depth ; ++i){
+		std::cout << "    ";
+	}
+	if (!(v->keyPtr)){
+		std::cout << "Avl is empty!! << std::endl" << std::endl;
+	} else{
+		std::cout << *(v->keyPtr) << "," << *(v->dataPtr) << std::endl;
+	}
+	printAvlRecursiveInt(v->left,depth+1);
 }
+
+template<class Key, class Data, class Compare>
+void AvlTree<Key, Data, Compare> :: printAvlInt(){
+	printAvlRecursiveInt(root, 0);
+}
+
 
 
 #endif /* AVL_H_ */
