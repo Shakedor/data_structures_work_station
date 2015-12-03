@@ -1,0 +1,95 @@
+Init done.
+AddTrainer: INVALID_INPUT
+AddTrainer: INVALID_INPUT
+AddTrainer: SUCCESS
+AddTrainer: SUCCESS
+AddTrainer: SUCCESS
+AddTrainer: FAILURE
+CatchPokemon: INVALID_INPUT
+CatchPokemon: INVALID_INPUT
+CatchPokemon: INVALID_INPUT
+CatchPokemon: INVALID_INPUT
+CatchPokemon: INVALID_INPUT
+CatchPokemon: INVALID_INPUT
+CatchPokemon: SUCCESS
+CatchPokemon: SUCCESS
+CatchPokemon: SUCCESS
+CatchPokemon: FAILURE
+CatchPokemon: FAILURE
+FreePokemon: INVALID_INPUT
+FreePokemon: INVALID_INPUT
+FreePokemon: FAILURE
+FreePokemon: SUCCESS
+LevelUp: SUCCESS
+LevelUp: SUCCESS
+LevelUp: INVALID_INPUT
+LevelUp: INVALID_INPUT
+LevelUp: INVALID_INPUT
+LevelUp: INVALID_INPUT
+LevelUp: FAILURE
+FreePokemon: SUCCESS
+LevelUp: FAILURE
+FreePokemon: SUCCESS
+CatchPokemon: SUCCESS
+CatchPokemon: SUCCESS
+CatchPokemon: SUCCESS
+CatchPokemon: SUCCESS
+CatchPokemon: SUCCESS
+GetTopPokemon: FAILURE
+GetTopPokemon: INVALID_INPUT
+Pokemon with highest level is: 11
+Pokemon with highest level is: 21
+Pokemon with highest level is: -1
+Pokemon with highest level is: 11
+LevelUp: SUCCESS
+Pokemon with highest level is: 21
+GetAllPokemonsByLevel: INVALID_INPUT
+GetAllPokemonsByLevel: FAILURE
+and there are no more pokemons!
+Level	||	Pokemon
+1	||	11
+2	||	12
+3	||	13
+and there are no more pokemons!
+Level	||	Pokemon
+1	||	21
+2	||	11
+3	||	12
+4	||	13
+5	||	22
+and there are no more pokemons!
+EvolvePokemon: SUCCESS
+EvolvePokemon: SUCCESS
+Level	||	Pokemon
+1	||	23
+2	||	12
+3	||	13
+4	||	14
+5	||	22
+and there are no more pokemons!
+EvolvePokemon: INVALID_INPUT
+EvolvePokemon: INVALID_INPUT
+EvolvePokemon: INVALID_INPUT
+EvolvePokemon: INVALID_INPUT
+EvolvePokemon: FAILURE
+EvolvePokemon: FAILURE
+UpdateLevels: INVALID_INPUT
+UpdateLevels: INVALID_INPUT
+UpdateLevels: INVALID_INPUT
+UpdateLevels: SUCCESS
+Level	||	Pokemon
+1	||	23
+2	||	12
+3	||	13
+4	||	14
+5	||	22
+and there are no more pokemons!
+UpdateLevels: SUCCESS
+Level	||	Pokemon
+1	||	12
+2	||	14
+3	||	22
+4	||	23
+5	||	13
+and there are no more pokemons!
+Quit done.

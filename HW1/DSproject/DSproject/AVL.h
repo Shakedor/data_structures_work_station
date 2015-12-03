@@ -146,7 +146,7 @@ private:
 	AvlNode<Key, Data>* doInsert(const Key& key, const Data& data);
 	AvlNode<Key, Data>* findSuccessor(AvlNode<Key, Data>* v);
 	void setNodes(AvlNode<Key, Data>* vNew, AvlNode<Key, Data>* vOld);
-	void doRemove(AvlNode<Key, Data>*);
+	AvlNode<Key, Data>* doRemove(AvlNode<Key, Data>*);
 	void fixPath(AvlNode<Key, Data>* v);
 
 	AvlNode<Key, Data>* do_find(const Key& key) const;
@@ -494,7 +494,7 @@ AvlNode<Key, Data>* AvlTree<Key, Data, Compare> :: do_find(const Key& key)const{
 template<class Key, class Data, class Compare>
 AvlNode<Key, Data>** AvlTree<Key, Data, Compare> :: findPtrInParent(AvlNode<Key, Data>* v){
 	assert(v);
-	if (!v->parent){//if v==root
+	if (!v->parent){ //if v==root
 		return &root;
 	}
 	AvlNode<Key, Data>* p = v->parent;
@@ -620,88 +620,46 @@ void AvlTree<Key, Data, Compare> ::setNodes(AvlNode<Key, Data>* vNew, AvlNode<Ke
 
 //Returns new root
 template<class Key, class Data, class Compare>
-void AvlTree<Key, Data, Compare> ::doRemove(AvlNode<Key, Data>* v){
-
+AvlNode<Key, Data>* AvlTree<Key, Data, Compare> ::doRemove(AvlNode<Key, Data>* v){
 	int sons = getNumOfSons(v);
+	bool vIsRoot = (root == NULL);
+	AvlNode<Key, Data>** vPtrInParent = vIsRoot ? NULL : findPtrInParent(v);
+	AvlNode<Key, Data>* vNew = NULL;
+		
 
-	//if leaf
-	// remove leaf
-	// parent balance factor is other son - 0
-	// start rolling from parent
-	if (sons == 0){
-		if (v != root){
-			*(findPtrInParent(v)) = NULL;
-			AvlNode<Key, Data>* parent = v->parent;
-			fixPath(parent);
-			delete(v);
-			return;
-		} else{ //v == root
-			delete(v);
+	switch (sons){
+	case 0:
+		if (vIsRoot){
 			root = NULL;
-			return;
 		}
-
-	}
-
-	// if has 1 son
-	// connect its parent with its only son
-	// parent bf is new son height - old son heght (could be zero)
-	// start rolling from parent
-	else if (sons == 1){
-		AvlNode<Key, Data>* onlySon = v->left ? v->left : v->right;
-		if (v != root){
-			*(findPtrInParent(v)) = onlySon;
-			onlySon->parent = v->parent;
-			fixPath(v->parent);
-			delete(v);
-			return;
+		else {
+			*vPtrInParent = NULL;
 		}
-		root = onlySon;
-		delete(v);
-		return;
-	}
-
-
-	//if has 2 sons and successor is leaf
-	// find successor,
-	//recursivly remove successor (but save his data)
-	//connect successor 2 both sons and the parent (end case successor could be a son)
-	else {
-		AvlNode<Key, Data>* succesor = findSuccessor(v);
-		int succesorSons = getNumOfSons(succesor);
-		if (succesorSons == 0){
-			AvlNode<Key, Data>* tmpParent = succesor->parent;
-			succesor->parent = NULL;
-			*findPtrInParent(succesor) = NULL;
-			fixPath(tmpParent);
-			setNodes(succesor, v);
-
-			if (v == root){
-				root = succesor;
-			}
-			delete(v);
-		} else if (succesorSons == 1){
-			AvlNode<Key, Data>* tmpParent = succesor->parent;
-			assert(succesor->left && !succesor->right);
-			AvlNode<Key, Data>* tmpSon = succesor->left;
-
-			*findPtrInParent(succesor) = tmpSon;
-			tmpSon = tmpParent;
-			fixPath(tmpParent);
-			setNodes(succesor, v);
-			if (v == root){
-				root = succesor;
-			}
-			delete(v);
+		break;
+	case 1:
+		vNew = v->left ? v->left : v->right;
+		assert(!(v->left && v->right));
+		if (vIsRoot){
+			*vPtrInParent = NULL;
+			root = v;
 		}
-	}
+		else{
 
-	// if has 2 son and successor has 1 son
-	//find successor
-	//recursivly remove successor (but save him)
-	//swithc successor with original node to be removed
+		}
+		break;
+	case 2:
+		if (vIsRoot){
 
+		}
+		else{
 
+		}
+		break;
+	default:
+		assert(0);
+	};
+
+	return vNew;
 }
 
 template<class Key, class Data, class Compare>

@@ -38,6 +38,11 @@ void DS_struct::CatchPokemon(int pokemonID, int trainerID, int level){
 	if (pokemonID <= 0 || trainerID <= 0 || level <= 0){
 		throw InvalidInput();
 	}
+
+	if (pokemonID == 24 && level == 431){
+		int fucku = 0;
+		fucku++;
+	}
 	
 	// get trainer with that ID , if not exist will throw failure
 	smart_pointer<trainer> myTrainer = t_AVL.find(trainerID);
@@ -223,15 +228,12 @@ void DS_struct::GetAllPokemonsByLevel(int trainerID, int **pokemons, int* numOfP
 		throw std::bad_alloc();
 	}
 
-	if (trainerID == 12){
-		int fucku = 0;
-		fucku++;
-	}
 	
 
 	for (int i = 0; i < pokemonArr.size; i++){
-		smart_pointer<pokemon> currpokemon = *(pokemonArr.dataArr[i]);
-		IDArr[i] = currpokemon->pokemon_ID;
+		smart_pointer<pokemon>* currpokemon = (pokemonArr.dataArr[i]);
+		int k =0;
+		//IDArr[i] = currpokemon->pokemon_ID;
 	}
 
 	//put number of pokemon in  pointer and the array of iDS_struct in the array pointer

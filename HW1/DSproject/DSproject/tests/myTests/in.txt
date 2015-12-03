@@ -1,0 +1,67 @@
+Init
+AddTrainer 0
+AddTrainer -5
+AddTrainer 1
+AddTrainer 2
+AddTrainer 3
+AddTrainer 2
+CatchPokemon 0 1 1
+CatchPokemon -5 1 1
+CatchPokemon 1 0 1
+CatchPokemon 2 -8 1
+CatchPokemon 1 1 -3
+CatchPokemon 1 1 0
+CatchPokemon 1 1 1
+CatchPokemon 2 2 10
+CatchPokemon 3 1 7
+CatchPokemon 1 1 1
+CatchPokemon 2 10 1
+FreePokemon 0
+FreePokemon -1
+FreePokemon 22
+FreePokemon 1
+LevelUp 2 2
+LevelUp 2 2
+LevelUp 0 2
+LevelUp -1 1
+LevelUp 2 0
+LevelUp 2 -1
+LevelUp 4 4
+FreePokemon 3
+LevelUp 3 4
+FreePokemon 2
+CatchPokemon 11 1 1
+CatchPokemon 12 1 1
+CatchPokemon 13 1 1
+CatchPokemon 21 2 1
+CatchPokemon 22 2 1
+GetTopPokemon 110
+GetTopPokemon 0
+GetTopPokemon 1
+GetTopPokemon 2
+GetTopPokemon 3
+GetTopPokemon -1
+LevelUp 21 4
+GetTopPokemon -1
+GetAllPokemonsByLevel 0
+GetAllPokemonsByLevel 36
+GetAllPokemonsByLevel 3
+GetAllPokemonsByLevel 1
+GetAllPokemonsByLevel -1
+EvolvePokemon 11 14
+EvolvePokemon 21 23
+GetAllPokemonsByLevel -1
+EvolvePokemon 12 0
+EvolvePokemon 22 -1
+EvolvePokemon 0 3
+EvolvePokemon -3 3
+EvolvePokemon 40 41
+EvolvePokemon 14 23
+UpdateLevels 1 -2
+UpdateLevels 0 1
+UpdateLevels 0 0
+UpdateLevels 1 1
+GetAllPokemonsByLevel -1
+UpdateLevels 2 10
+GetAllPokemonsByLevel -1
+Quit
