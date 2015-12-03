@@ -412,9 +412,9 @@ AvlTree<Key, Data, Compare> :: AvlTree(const AvlTree& a, const AvlTree& b) :
 	arrToTree(C, treeSize);
 	updateMaxNode();
 
-	delete[](C);
-	delete[](B);
-	delete[](A);
+	if (sizeA + sizeB != 0) {delete[](C);}
+	if (sizeB != 0) {delete[](B);}
+	if (sizeA != 0) {delete[](A);}
 }
 
 //////////////////////////////////////
@@ -647,7 +647,7 @@ public:
 	}
 	void operator()(AvlNode<Key, Data>* v){
 		assert(v && arr);
-		assert(current < maxSize);
+		assert(current < maxSize || (current == 0 && maxSize == 0));
 		if ( ! (condition(*(v->keyPtr), *(v->dataPtr))) ){
 			arr[current].keyPtr = v->keyPtr;
 			arr[current].dataPtr = v->dataPtr;
@@ -768,7 +768,11 @@ class NodeOperation{
 public:
 	NodeOperation(Operation& op) : op(op){}
 	void operator()(AvlNode<Key, Data>* v){
-		op(*(v->keyPtr), *(v->dataPtr));
+		assert(v);
+		if (v->keyPtr){
+			assert((v->dataPtr));
+			op(*(v->keyPtr), *(v->dataPtr));
+		}
 	}
 };
 
