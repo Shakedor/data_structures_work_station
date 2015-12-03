@@ -625,6 +625,7 @@ AvlNode<Key, Data>* AvlTree<Key, Data, Compare> ::doRemove(AvlNode<Key, Data>* v
 	bool vIsRoot = (root == NULL);
 	AvlNode<Key, Data>** vPtrInParent = vIsRoot ? NULL : findPtrInParent(v);
 	AvlNode<Key, Data>* vNew = NULL;
+	AvlNode<Key, Data>* toFix = NULL;
 		
 
 	switch (sons){
@@ -640,26 +641,41 @@ AvlNode<Key, Data>* AvlTree<Key, Data, Compare> ::doRemove(AvlNode<Key, Data>* v
 		vNew = v->left ? v->left : v->right;
 		assert(!(v->left && v->right));
 		if (vIsRoot){
-			*vPtrInParent = NULL;
-			root = v;
+			vNew->parent = NULL;
+			root = vNew;
 		}
 		else{
-
+			*vPtrInParent = vNew;
+			vNew->parent = v->parent;
 		}
 		break;
 	case 2:
-		if (vIsRoot){
+		vNew = findSuccessor(v);
+		toFix = (vNew->parent == v)? vNew : vNew->parent;
 
+		if(getNumOfSons(vNew) == 0){
+			*findPtrInParent(vNew)=NULL;
+			vNew->parent=NULL;
+		}else if(getNumOfSons(vNew) == 1){
+			AvlNode<Key, Data>* newSon = vNew->left ? vNew->left :vNew->right;
+			*findPtrInParent(vNew)=newSon;
+			newSon->parent=vNew->parent;
+			vNew->right=vNew->left=vNew->parent=NULL;
+		}
+
+
+		if (vIsRoot){
+			setNodes(vNew, v);
+			root = vNew;
 		}
 		else{
-
+			setNodes(vNew, v);
 		}
 		break;
-	default:
-		assert(0);
-	};
+	}
 
-	return vNew;
+	delete(v);
+	return toFix;
 }
 
 template<class Key, class Data, class Compare>
@@ -672,7 +688,7 @@ void AvlTree<Key, Data, Compare> :: remove(const Key& key){
 			throw dataStructures::dataDoesNotExist();
 		}
 		
-		doRemove(v);
+		fixPath(doRemove(v));
 	}
 	--treeSize;
 	updateMaxNode();
