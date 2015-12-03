@@ -1,18 +1,39 @@
 #include "DS_struct.h"
 #include "dataStructures.h"
+#include "pokemon.h"
 
+void DS_struct::debug() const{
+	if (doDebug){
+		try {
+			pL_AVL.find(pokemonKey(30,216));
+		}
+		catch (dataStructures::dataDoesNotExist&){
+			assert(0);
+		}
+		catch (...){
+			assert(0);
+		}
+	}
+}
+
+#define CALL_DEBUG_METHOD() do { \
+	/*debug();*/;\
+} while (0)
+///////////////////////////////////////////////////////////////////////////////
 
 
 void DS_struct::AddTrainer(int trainerID){
+	CALL_DEBUG_METHOD();
 	if (trainerID <= 0){
 		throw InvalidInput();
 	}
 	
 	t_AVL.insert(trainerID, smart_pointer<trainer>(new trainer(trainerID)));
-
+	CALL_DEBUG_METHOD();
 }
 
 void DS_struct::CatchPokemon(int pokemonID, int trainerID, int level){
+	CALL_DEBUG_METHOD();
 	// if either ints is not poisitve return invalidinput
 	if (pokemonID <= 0 || trainerID <= 0 || level <= 0){
 		throw InvalidInput();
@@ -59,10 +80,12 @@ void DS_struct::CatchPokemon(int pokemonID, int trainerID, int level){
 	catch (...){
 		assert(0);
 	}
+	CALL_DEBUG_METHOD();
 
 }
 
 void DS_struct::FreePokemon(int pokemonID){
+	CALL_DEBUG_METHOD();
 	// if id not positive return invalid input
 	if (pokemonID <= 0 ){
 		throw InvalidInput();
@@ -77,16 +100,24 @@ void DS_struct::FreePokemon(int pokemonID){
 	// get trainer.
 	smart_pointer<trainer>  myTrainer = t_AVL.find(trainerID);
 	// remove pokemon from all 3 trees and delete pokemon
+	if (pokemonID == 253 && level == 236){
+		int fucku = 1;
+		fucku++;
+	}
 	myTrainer->tp_AVL.remove(myKey);
+	CALL_DEBUG_METHOD();
+
 	pL_AVL.remove(myKey);
+	CALL_DEBUG_METHOD();
 	p_AVL.remove(pokemonID);
 
 	//myPokemon is deleted once it goes out of scope
 	// return success
-
+	CALL_DEBUG_METHOD();
 }
 
 void DS_struct::LevelUp(int pokemonID, int levelIncrease){
+	CALL_DEBUG_METHOD();
 	// if int non positive return INVALID input
 	if (pokemonID <= 0 || levelIncrease <=0){
 		throw InvalidInput();
@@ -106,11 +137,12 @@ void DS_struct::LevelUp(int pokemonID, int levelIncrease){
 	FreePokemon(pokemonID);
 
 	CatchPokemon(pokemonID, trainerID, level + levelIncrease);
-
+	CALL_DEBUG_METHOD();
 }
 
 
 void DS_struct::GetTopPokemon(int trainerID, int *pokemonID){
+	CALL_DEBUG_METHOD();
 	//if id== null or trainerID==o return invalid input
 	if ( pokemonID==NULL || trainerID == 0){
 		throw DS_struct::InvalidInput();
@@ -153,10 +185,11 @@ void DS_struct::GetTopPokemon(int trainerID, int *pokemonID){
 		*pokemonID = topPokemon->pokemon_ID;
 	}
 	
-
+	CALL_DEBUG_METHOD();
 }
 
 void DS_struct::GetAllPokemonsByLevel(int trainerID, int **pokemons, int* numOfPokemon){
+	CALL_DEBUG_METHOD();
 	//if pointer = null or trainer id =0 return invalid input
 	if (numOfPokemon == NULL || pokemons == NULL || trainerID == 0){
 		throw DS_struct::InvalidInput();
@@ -190,6 +223,12 @@ void DS_struct::GetAllPokemonsByLevel(int trainerID, int **pokemons, int* numOfP
 		throw std::bad_alloc();
 	}
 
+	if (trainerID == 12){
+		int fucku = 0;
+		fucku++;
+	}
+	
+
 	for (int i = 0; i < pokemonArr.size; i++){
 		smart_pointer<pokemon> currpokemon = *(pokemonArr.dataArr[i]);
 		IDArr[i] = currpokemon->pokemon_ID;
@@ -199,10 +238,12 @@ void DS_struct::GetAllPokemonsByLevel(int trainerID, int **pokemons, int* numOfP
 	*numOfPokemon = treeSize;
 	*pokemons = IDArr;
 	//return success
+	CALL_DEBUG_METHOD();
 
 }
 
 void DS_struct::EvolvePokemon(int pokemonID, int evolvedID){
+	CALL_DEBUG_METHOD();
 	// if either id <=0 throw invalid input
 	if (pokemonID <= 0 || evolvedID <= 0){
 		throw InvalidInput();
@@ -234,13 +275,15 @@ void DS_struct::EvolvePokemon(int pokemonID, int evolvedID){
 		assert(0);
 	}
 	// if evolved exists then we get here and throw failure
-	throw Failure();
+	throw dataStructures::failureExceptions();
 
+	CALL_DEBUG_METHOD();
 }
 
 
 
 void DS_struct::UpdateLevels( int stoneCode, int stoneFactor){
+	CALL_DEBUG_METHOD();
 	//if code or factor <1 return invalid input
 	if (stoneCode <= 1 || stoneFactor <= 1){
 		throw InvalidInput();
@@ -264,15 +307,29 @@ void DS_struct::UpdateLevels( int stoneCode, int stoneFactor){
 		AvlTree<pokemonKey, smart_pointer<pokemon>, compareFuncPokKey> negTree(currentTrainer->tp_AVL);
 
 		//filter trees based on stone code / not sotne code
-
-		posTree.removeIf(falseStone);
-		negTree.removeIf(trueStone);
+		if (currentTrainer->tp_AVL.get_size()>0){
+			posTree.removeIf(falseStone);
+			negTree.removeIf(trueStone);
+		}
+		
 
 		// do stone code update operation on each key
-		posTree.inorder(keyUpdate);
+		if (posTree.get_size() > 0){
+			posTree.inorder(keyUpdate);
+		}
 		// merge trees
 		// store them as trainer's tree
-		currentTrainer->tp_AVL = AvlTree<pokemonKey, smart_pointer<pokemon>, compareFuncPokKey>(posTree, negTree);
+		//ifs used to avoid cases where empty trees are merged.
+		if (posTree.get_size() == 0){
+			currentTrainer->tp_AVL = AvlTree<pokemonKey, smart_pointer<pokemon>, compareFuncPokKey>(negTree);
+		}
+		else if (negTree.get_size() == 0)	{
+			currentTrainer->tp_AVL = AvlTree<pokemonKey, smart_pointer<pokemon>, compareFuncPokKey>(posTree);
+		}
+		else{
+			currentTrainer->tp_AVL = AvlTree<pokemonKey, smart_pointer<pokemon>, compareFuncPokKey>(posTree, negTree);
+		}
+		
 
 	}
 
@@ -284,17 +341,33 @@ void DS_struct::UpdateLevels( int stoneCode, int stoneFactor){
 	AvlTree<pokemonKey, smart_pointer<pokemon>, compareFuncPokKey> negTree(pL_AVL);
 
 	//filter trees based on stone code / not sotne code
-
-	posTree.removeIf(falseStone);
-	negTree.removeIf(trueStone);
+	if (pL_AVL.get_size() > 0){
+		posTree.removeIf(falseStone);
+		negTree.removeIf(trueStone);
+	}
 
 	// do stone code update operation on each key ***and DATA only this one time***
-	posTree.postorder(keyUpdate);
-	posTree.postorder(pokemonUpdate);
+	if (posTree.get_size() > 0){
+		posTree.inorder(keyUpdate);
+		posTree.inorder(pokemonUpdate);
+	}
+
 	// merge trees
 	// store them as trainer's tree
-	pL_AVL =AvlTree<pokemonKey, smart_pointer<pokemon>, compareFuncPokKey>(posTree, negTree);
+	if (posTree.get_size() == 0){
+		pL_AVL = AvlTree<pokemonKey, smart_pointer<pokemon>, compareFuncPokKey>(negTree);
 
+	}
+	else if (negTree.get_size() == 0)	{
+		pL_AVL = AvlTree<pokemonKey, smart_pointer<pokemon>, compareFuncPokKey>(posTree);
+
+	}
+	else{
+		pL_AVL = AvlTree<pokemonKey, smart_pointer<pokemon>, compareFuncPokKey>(posTree, negTree);
+
+	}
+
+	CALL_DEBUG_METHOD();
 
 }
 

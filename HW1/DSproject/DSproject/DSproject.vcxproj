@@ -76,6 +76,7 @@
     <ClInclude Include="trainer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="dataStructures.cpp" />
     <ClCompile Include="DS_struct.cpp" />
     <ClCompile Include="DS_test.cpp" />
     <ClCompile Include="library1.cpp" />

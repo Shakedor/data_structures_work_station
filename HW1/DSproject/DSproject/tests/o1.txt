@@ -33,3 +33,10 @@ and there are no more pokemons!
 Level	||	Pokemon
 1	||	120
 and there are no more pokemons!
+UpdateLevels: SUCCESS
+Level	||	Pokemon
+1	||	120
+2	||	101
+3	||	105
+and there are no more pokemons!
+Quit done.

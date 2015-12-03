@@ -20,14 +20,24 @@ int pokemonLevelCompare(pokemonKey a, pokemonKey b){
 		return -1;
 	}
 	else{
-		if (a.pokemon_ID > b.pokemon_ID){
+		if (a.pokemon_ID < b.pokemon_ID){
 			return 1;
 		}
-		else if (a.pokemon_ID < b.pokemon_ID){
+		else if (a.pokemon_ID > b.pokemon_ID){
 			return -1;
 		}
 		else{
 			return 0;
 		}
 	}
+}
+
+std::ostream& operator <<(std::ostream& os, pokemon& pok){
+	os << '(' << pok.level << ',' << pok.pokemon_ID << ',' << pok.trainer_ID << ')';
+	return os;
+}
+
+std::ostream& operator <<(std::ostream& os, pokemonKey& pokKey){
+	os << '(' << pokKey.level << ',' << pokKey.pokemon_ID << ')';
+	return os;
 }

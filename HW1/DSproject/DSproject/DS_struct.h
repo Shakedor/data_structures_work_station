@@ -14,9 +14,9 @@ class DS_struct{
 	AvlTree<int, smart_pointer<pokemon>, compareFuncInt> p_AVL;
 	AvlTree<pokemonKey, smart_pointer<pokemon>, compareFuncPokKey> pL_AVL;
 
-
+	bool doDebug; // TODO: remove
 public:
-	DS_struct() :t_AVL(IDCompare), p_AVL(IDCompare), pL_AVL(pokemonLevelCompare){}
+	DS_struct() :t_AVL(IDCompare), p_AVL(IDCompare), pL_AVL(pokemonLevelCompare), doDebug(false){}
 	void AddTrainer(int trainerID);
 	void CatchPokemon(int pokemonID, int trainerID, int level);
 	void FreePokemon(int pokemonID);
@@ -31,6 +31,7 @@ public:
 	class InvalidInput : public DSException{};
 	class Failure : public DSException{};
 
+	void DS_struct::debug() const; // TODO: remove
 };
 
 template<class key,class data>
@@ -47,6 +48,7 @@ public:
 		keyArr = new key*[size];
 	}
 	void operator() (key& newKey,data& newdata){
+		assert(&newKey && &newdata);
 		if (counter >= size){
 			throw dataStructures::sizeOverFlow();
 		}

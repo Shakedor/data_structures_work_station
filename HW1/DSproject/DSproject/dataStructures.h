@@ -1,7 +1,13 @@
 #ifndef DAT_STRUCT
 #define DAT_STRUCT
+#include <iostream>
 
 namespace dataStructures{
+	
+	template<class data>
+	class smart_pointer;
+	template<class data>
+	std::ostream& operator<<(std::ostream& os, smart_pointer<data>& sp);
 
 	class dataSturctExceptions{};
 	class failureExceptions : public dataSturctExceptions {};
@@ -95,10 +101,25 @@ namespace dataStructures{
 			return *this;
 		}
 
+		friend std::ostream& operator<< (std::ostream& os, smart_pointer<data>& sp);
 
 	};
 
+	template<class data>
+	std::ostream& operator<< (std::ostream& os, smart_pointer<data>& sp){
+		data myData = *sp;
+		os << myData;
+		return os;
+	}
 
+	template<class data>
+	class spPrint{
+	public:
+		spPrint(){}
+		void operator() (smart_pointer<data>& point){
+			(*point).print();
+		}
+	};
 
 }
 
