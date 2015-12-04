@@ -5,9 +5,7 @@
 #include <cstdlib>
 #include <cassert>
 #include "dataStructures.h"
-#include <iostream>	//TODO: REMOVE
 #include <cmath>
-#include "dataStructures.h"
 
 template<class T>
 const T& max(const T& a, const T& b){
@@ -67,8 +65,13 @@ public:
 
 	AvlNode(const Key& key, const Data& data, AvlNode* parent = NULL) : keyPtr(NULL),
 			dataPtr(NULL), left(NULL), right(NULL), parent(parent), height(0), bf(0) {
-		keyPtr = new Key(key);
-		dataPtr = new Data(data); // TODO: Error handling
+		try {
+			keyPtr = new Key(key);
+			dataPtr = new Data(data);
+		}catch(...){
+			delete(keyPtr);
+			throw std::bad_alloc();
+		}
 	}
 	explicit AvlNode() : keyPtr(NULL), dataPtr(NULL), left(NULL), right(NULL), parent(NULL), height(0), bf(0) {}
 	~AvlNode(){
@@ -102,10 +105,6 @@ public:
 template<class Key, class Data, class Compare>
 class AvlTree {
 public:
-
-	AvlNode<Key, Data>* root;
-
-
 	AvlTree(const Compare& Cmp) : cmp(Cmp), treeSize(0), root(NULL), max_node(NULL){}
 	AvlTree(const AvlTree& a, const AvlTree& b); // O(max(a.treeSize, b.treeSize))
 	AvlTree(const AvlTree&); // O(treeSize)
@@ -141,7 +140,7 @@ public:
 private:
 	Compare cmp;
 	int treeSize;
-	//AvlNode<Key, Data>* root; //TODO: undelete
+	AvlNode<Key, Data>* root;
 	AvlNode<Key, Data>* max_node;
 
 	void destroyTree(AvlNode<Key, Data>*);
@@ -339,8 +338,14 @@ public:
 	arrToTreeOperation(Element arr, int size) : arr(arr), current(0), size(size){}
 	void operator()(AvlNode<Key, Data>* v){
 		if (current < size){
-			v->keyPtr = new Key(*(arr[current].keyPtr));
-			v->dataPtr = new Data(*(arr[current].dataPtr));
+			try {
+				v->keyPtr = new Key(*(arr[current].keyPtr));
+				v->dataPtr = new Data(*(arr[current].dataPtr));
+			} catch(...){
+				delete(v->keyPtr);
+				throw std::bad_alloc();
+			}
+
 			++current;
 		}
 	}
@@ -388,7 +393,8 @@ AvlNode<Key, Data>* AvlTree<Key, Data, Compare> :: buildEmptyFullAvl(int height)
 
 template<class Key, class Data, class Compare>
 AvlNode<Key, Data>* AvlTree<Key, Data, Compare> :: buildEmptyAvl(int size){
-	int internalNodes = size/2; // The number of internal nodes in a complete binary tree of n nodes is floor(n/2)
+	int internalNodes = size/2; // The number of internal nodes in a complete
+								// binary tree of n nodes is floor(n/2)
 	int fullAvlHeight = (internalNodes == 0) ? 0 : int(log2(internalNodes));
 
 	AvlNode<Key, Data>* avl = buildEmptyFullAvl(fullAvlHeight);
@@ -418,13 +424,23 @@ public:
 
 template<class Key, class Data, class Compare>
 AvlTree<Key, Data, Compare> :: AvlTree(const AvlTree& a, const AvlTree& b) :
-	cmp(a.cmp), treeSize(a.get_size()+b.get_size()), root(buildEmptyAvl(treeSize)), max_node(NULL){
+	cmp(a.cmp), treeSize(a.get_size()+b.get_size()),
+	root(buildEmptyAvl(a.get_size()+b.get_size())), max_node(NULL){
 	int sizeA = a.get_size();
 	int sizeB = b.get_size();
 
-	Element A = new struct element[sizeA];
-	Element B = new struct element[sizeB];
-	Element C = new struct element[sizeA + sizeB]; //TODO: error management
+	Element A = NULL;
+	Element B = NULL;
+	Element C = NULL;
+
+	try{
+		if (sizeA != 0) {A = new struct element[sizeA];}
+		if (sizeB != 0) {B = new struct element[sizeB];}
+		if (sizeA + sizeB != 0) {C = new struct element[sizeA + sizeB];}
+	} catch (...){
+		if (sizeB != 0) {delete[](B);}
+		if (sizeA != 0) {delete[](A);}
+	}
 
 	a.treeToArr(A);
 	b.treeToArr(B);
@@ -827,9 +843,6 @@ AvlNode<Key, Data>* AvlTree<Key, Data, Compare> :: roll_RL(AvlNode<Key, Data>* v
 //////	AvlTree iterating methods	//////
 //////////////////////////////////////////
 
-
-
-
 template<class Key, class Data, class Compare>
 template<class Operation>
 void AvlTree<Key, Data, Compare> :: orderRecursion(AvlNode<Key, Data>* v, Operation& op,
@@ -858,11 +871,11 @@ void AvlTree<Key, Data, Compare> ::orderRecursion(AvlNode<Key, Data>* v, NodeOpe
 	if (order == postOrder) {op(v);} //TODO: eliminate code duplication
 }
 
-template<class Key, class Data, class Operation>
+template<class Key, class Data, class KeyDataOperation>
 class NodeOperation{
-	Operation& op;
+	KeyDataOperation& op;
 public:
-	NodeOperation(Operation& op) : op(op){}
+	NodeOperation(KeyDataOperation& op) : op(op){}
 	void operator()(AvlNode<Key, Data>* v){
 		assert(v);
 		if (v->keyPtr){
@@ -873,26 +886,30 @@ public:
 };
 
 template<class Key, class Data, class Compare>
-template<class Operation>
-void AvlTree<Key, Data, Compare> :: preorder(Operation& op){
-	orderRecursion(root, NodeOperation<Key, Data, Operation>(op), preOrder);
+template<class KeyDataOperation>
+void AvlTree<Key, Data, Compare> :: preorder(KeyDataOperation& keyDataOperation){
+	NodeOperation<Key, Data, KeyDataOperation> nodeOperation(keyDataOperation);
+	orderRecursion(root, nodeOperation, preOrder);
 }
 
 template<class Key, class Data, class Compare>
-template<class Operation>
-void AvlTree<Key, Data, Compare> :: inorder(Operation& op){
-	this->template orderRecursion<NodeOperation<Key, Data, Operation> >(root, NodeOperation<Key, Data, Operation>(op), inOrder);
+template<class KeyDataOperation>
+void AvlTree<Key, Data, Compare> :: inorder(KeyDataOperation& keyDataOperation){
+	NodeOperation<Key, Data, KeyDataOperation> nodeOperation(keyDataOperation);
+	orderRecursion(root, nodeOperation, inOrder);
 }
 
 template<class Key, class Data, class Compare>
-template<class Operation>
-void AvlTree<Key, Data, Compare> :: postorder(Operation& op){
-	orderRecursion(root, NodeOperation<Key, Data, Operation>(op), postOrder);
+template<class KeyDataOperation>
+void AvlTree<Key, Data, Compare> :: postorder(KeyDataOperation& keyDataOperation){
+	NodeOperation<Key, Data, KeyDataOperation> nodeOperation(keyDataOperation);
+	orderRecursion(root, nodeOperation, postOrder);
 }
-/*
+
 template<class Key, class Data, class Compare>
 template<class printKey, class printData>
-void AvlTree<Key, Data, Compare> ::printAvlRecursive(AvlNode<Key, Data>* v, int depth, printKey& printK, printData& printD){
+void AvlTree<Key, Data, Compare> ::printAvlRecursive(AvlNode<Key, Data>* v, int depth,
+		printKey& printK, printData& printD){
 	if (!v){
 		return;
 	}
@@ -904,38 +921,15 @@ void AvlTree<Key, Data, Compare> ::printAvlRecursive(AvlNode<Key, Data>* v, int 
 		std::cout << "Avl is empty!! << std::endl" << std::endl;
 	} else{
 		printK(*(v->keyPtr));
-		//printD(*(v->dataPtr));
+		printD(*(v->dataPtr));
 		std::cout << std::endl;
-		//std::cout << *(v->keyPtr) << "," << *(v->dataPtr) << std::endl;
 	}
 	printAvlRecursive(v->left, depth + 1, printK, printD);
-}
-*/
-
-
-
-template<class Key, class Data, class Compare>
-void AvlTree<Key, Data, Compare> :: printAvlRecursiveInt(AvlNode<Key, Data>* v, int depth){
-	if (!v){
-		return;
-	}
-	printAvlRecursiveInt(v->right, depth+1);
-	for (int i=0 ; i < depth ; ++i){
-		std::cout << "    ";
-	}
-	if (!(v->keyPtr)){
-		std::cout << "Avl is empty!! << std::endl" << std::endl;
-	} else{
-		std::cout << *(v->keyPtr) << "," << *(v->dataPtr) << std::endl;
-	}
-	printAvlRecursiveInt(v->left,depth+1);
 }
 
 template<class Key, class Data, class Compare>
 void AvlTree<Key, Data, Compare> :: printAvlInt(){
-	printAvlRecursiveInt(root, 0);
+	printAvlRecursive(root, 0);
 }
-
-
 
 #endif /* AVL_H_ */
