@@ -101,16 +101,10 @@ namespace dataStructures{
 			return *this;
 		}
 
-		friend std::ostream& operator<< (std::ostream& os, smart_pointer<data>& sp);
+
 
 	};
 
-	template<class data>
-	std::ostream& operator<< (std::ostream& os, smart_pointer<data>& sp){
-		data myData = *sp;
-		os << myData;
-		return os;
-	}
 
 	template<class data>
 	class spPrint{

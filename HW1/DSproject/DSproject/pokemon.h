@@ -18,9 +18,9 @@ public:
 	int pokemon_ID;
 	int level;
 	~pokemon(){};
-	void print(){
+/*	void print(){
 		printf("(%d,%d,%d)", level, pokemon_ID, trainer_ID);
-	}
+	}*/
 	friend std::ostream& operator <<(std::ostream& os, pokemon& pok);
 };
 
@@ -30,7 +30,7 @@ class pokemonKey{
 	int level;
 
 	pokemonKey(int pokID, int level) :pokemon_ID(pokID), level(level){};
-	friend std::ostream& operator <<(std::ostream& os, pokemonKey& pokKey);
+
 };
 
 

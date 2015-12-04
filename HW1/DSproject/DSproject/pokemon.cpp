@@ -32,12 +32,3 @@ int pokemonLevelCompare(pokemonKey a, pokemonKey b){
 	}
 }
 
-std::ostream& operator <<(std::ostream& os, pokemon& pok){
-	os << '(' << pok.level << ',' << pok.pokemon_ID << ',' << pok.trainer_ID << ')';
-	return os;
-}
-
-std::ostream& operator <<(std::ostream& os, pokemonKey& pokKey){
-	os << '(' << pokKey.level << ',' << pokKey.pokemon_ID << ')';
-	return os;
-}

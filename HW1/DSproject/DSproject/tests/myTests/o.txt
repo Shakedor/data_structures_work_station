@@ -47,16 +47,49 @@ GetAllPokemonsByLevel: INVALID_INPUT
 GetAllPokemonsByLevel: FAILURE
 and there are no more pokemons!
 Level	||	Pokemon
-1	||	-842150451
-2	||	-842150451
-3	||	-842150451
+1	||	11
+2	||	12
+3	||	13
 and there are no more pokemons!
 Level	||	Pokemon
-1	||	-842150451
-2	||	-842150451
-3	||	-842150451
-4	||	-842150451
-5	||	-842150451
+1	||	21
+2	||	11
+3	||	12
+4	||	13
+5	||	22
 and there are no more pokemons!
-EvolvePokemon: FAILURE
 EvolvePokemon: SUCCESS
+EvolvePokemon: SUCCESS
+Level	||	Pokemon
+1	||	23
+2	||	12
+3	||	13
+4	||	14
+5	||	22
+and there are no more pokemons!
+EvolvePokemon: INVALID_INPUT
+EvolvePokemon: INVALID_INPUT
+EvolvePokemon: INVALID_INPUT
+EvolvePokemon: INVALID_INPUT
+EvolvePokemon: FAILURE
+EvolvePokemon: FAILURE
+UpdateLevels: INVALID_INPUT
+UpdateLevels: INVALID_INPUT
+UpdateLevels: INVALID_INPUT
+UpdateLevels: INVALID_INPUT
+Level	||	Pokemon
+1	||	23
+2	||	12
+3	||	13
+4	||	14
+5	||	22
+and there are no more pokemons!
+UpdateLevels: SUCCESS
+Level	||	Pokemon
+1	||	12
+2	||	14
+3	||	22
+4	||	23
+5	||	13
+and there are no more pokemons!
+Quit done.

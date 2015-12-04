@@ -219,7 +219,7 @@ void DS_struct::GetAllPokemonsByLevel(int trainerID, int **pokemons, int* numOfP
 	//get size of MAVL tree from either DS_struct or appropriate trainer
 	int treeSize = correctTree->get_size();
 	// preform an postorder walk on the appropriate MAVL tree, saving each pokemon to an arrray 
-	treeSaver<pokemonKey,smart_pointer<pokemon>> pokemonArr(treeSize);
+	treeSaver<pokemonKey,smart_pointer<pokemon> > pokemonArr(treeSize);
 	correctTree->inorder(pokemonArr);
 
 	// malloc an array of such ints. // if failed return allocation error
@@ -231,9 +231,8 @@ void DS_struct::GetAllPokemonsByLevel(int trainerID, int **pokemons, int* numOfP
 	
 
 	for (int i = 0; i < pokemonArr.size; i++){
-		smart_pointer<pokemon>* currpokemon = (pokemonArr.dataArr[i]);
-		int k =0;
-		//IDArr[i] = currpokemon->pokemon_ID;
+		smart_pointer<pokemon> currpokemon = *(pokemonArr.dataArr[i]);
+		IDArr[i] = currpokemon->pokemon_ID;
 	}
 
 	//put number of pokemon in  pointer and the array of iDS_struct in the array pointer
@@ -293,8 +292,8 @@ void DS_struct::UpdateLevels( int stoneCode, int stoneFactor){
 
 	//make array of trainers
 	int trainerNum=t_AVL.get_size();
-	treeSaver<int,smart_pointer<trainer>> trainerArr=treeSaver<int,smart_pointer<trainer>>(trainerNum);
-	t_AVL.postorder(trainerArr);
+	treeSaver<int,smart_pointer<trainer> > trainerArr=treeSaver<int,smart_pointer<trainer> >(trainerNum);
+	t_AVL.inorder(trainerArr);// TODO check if postorder
 	
 	isStoneCode trueStone = isStoneCode(stoneCode, true);
 	isStoneCode falseStone = isStoneCode(stoneCode, false);
@@ -317,7 +316,7 @@ void DS_struct::UpdateLevels( int stoneCode, int stoneFactor){
 
 		// do stone code update operation on each key
 		if (posTree.get_size() > 0){
-			posTree.inorder(keyUpdate);
+			posTree.inorder<stoneCodeKeyUpdate>(keyUpdate);
 		}
 		// merge trees
 		// store them as trainer's tree
@@ -350,8 +349,8 @@ void DS_struct::UpdateLevels( int stoneCode, int stoneFactor){
 
 	// do stone code update operation on each key ***and DATA only this one time***
 	if (posTree.get_size() > 0){
-		posTree.inorder(keyUpdate);
-		posTree.inorder(pokemonUpdate);
+		posTree.template inorder<stoneCodeKeyUpdate>(keyUpdate);
+		posTree.template inorder<stoneCodePokemonUpdate>(pokemonUpdate);
 	}
 
 	// merge trees

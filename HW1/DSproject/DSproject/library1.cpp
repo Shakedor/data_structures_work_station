@@ -80,8 +80,9 @@ StatusType UpdateLevels(void *DS, int stoneCode, int stoneFactor){
 }
 
 void Quit(void **DS){
-	if (DS != NULL){
-		delete *DS;
-		*DS = NULL;
+	DS_struct** ds = (DS_struct**)(DS);
+	if (ds != NULL){
+		delete *ds;
+		*ds = NULL;
 	}
 }

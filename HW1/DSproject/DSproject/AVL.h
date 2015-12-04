@@ -839,8 +839,8 @@ void AvlTree<Key, Data, Compare> :: orderRecursion(AvlNode<Key, Data>* v, Operat
 }
 
 template<class Key, class Data, class Compare>
-template<class Operation>
-void AvlTree<Key, Data, Compare> :: orderRecursion(AvlNode<Key, Data>* v, Operation& op,
+template<class NodeOperation>
+void AvlTree<Key, Data, Compare> ::orderRecursion(AvlNode<Key, Data>* v, NodeOperation& op,
 		traversalOrder order) const{
 	if (!v){
 		return;
@@ -875,7 +875,7 @@ void AvlTree<Key, Data, Compare> :: preorder(Operation& op){
 template<class Key, class Data, class Compare>
 template<class Operation>
 void AvlTree<Key, Data, Compare> :: inorder(Operation& op){
-	orderRecursion(root, NodeOperation<Key, Data, Operation>(op), inOrder);
+	this->template orderRecursion<NodeOperation<Key, Data, Operation> >(root, NodeOperation<Key, Data, Operation>(op), inOrder);
 }
 
 template<class Key, class Data, class Compare>

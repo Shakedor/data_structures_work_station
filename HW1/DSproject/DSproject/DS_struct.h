@@ -31,7 +31,7 @@ public:
 	class InvalidInput : public DSException{};
 	class Failure : public DSException{};
 
-	void DS_struct::debug() const; // TODO: remove
+	void debug() const; // TODO: remove
 };
 
 template<class key,class data>
@@ -43,7 +43,7 @@ public:
 	key** keyArr;
 
 
-	treeSaver(int size) :size(size),counter(0){
+	treeSaver(int len) :size(len),counter(0){
 		dataArr = new data*[size];
 		keyArr = new key*[size];
 	}
