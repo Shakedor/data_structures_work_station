@@ -29,10 +29,6 @@ void DS_struct::CatchPokemon(int pokemonID, int trainerID, int level){
 		throw InvalidInput();
 	}
 
-	if (pokemonID == 24 && level == 431){
-		int fucku = 0;
-		fucku++;
-	}
 	
 	// get trainer with that ID , if not exist will throw failure
 	smart_pointer<trainer> myTrainer = t_AVL.find(trainerID);
@@ -95,10 +91,8 @@ void DS_struct::FreePokemon(int pokemonID){
 	// get trainer.
 	smart_pointer<trainer>  myTrainer = t_AVL.find(trainerID);
 	// remove pokemon from all 3 trees and delete pokemon
-	if (pokemonID == 448 && level == 194){
-		int fucku = 1;
-		fucku++;
-	}
+
+
 	CALL_DEBUG_METHOD();
 	myTrainer->tp_AVL.remove(myKey);
 	CALL_DEBUG_METHOD();

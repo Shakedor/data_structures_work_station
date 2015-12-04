@@ -16,7 +16,7 @@ class DS_struct{
 
 	bool doDebug; // TODO: remove
 public:
-	DS_struct() :t_AVL(IDCompare), p_AVL(IDCompare), pL_AVL(pokemonLevelCompare), doDebug(true){}
+	DS_struct() :t_AVL(IDCompare), p_AVL(IDCompare), pL_AVL(pokemonLevelCompare), doDebug(false){}
 	void AddTrainer(int trainerID);
 	void CatchPokemon(int pokemonID, int trainerID, int level);
 	void FreePokemon(int pokemonID);
