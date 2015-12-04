@@ -76,7 +76,7 @@ EvolvePokemon: FAILURE
 UpdateLevels: INVALID_INPUT
 UpdateLevels: INVALID_INPUT
 UpdateLevels: INVALID_INPUT
-UpdateLevels: INVALID_INPUT
+UpdateLevels: SUCCESS
 Level	||	Pokemon
 1	||	23
 2	||	12

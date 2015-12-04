@@ -4,20 +4,15 @@
 
 void DS_struct::debug() const{
 	if (doDebug){
-		try {
-			pL_AVL.find(pokemonKey(30,216));
-		}
-		catch (dataStructures::dataDoesNotExist&){
-			assert(0);
-		}
-		catch (...){
-			assert(0);
+		if (pL_AVL.root){
+			pL_AVL.root->left;
+			pL_AVL.root->right;
 		}
 	}
 }
 
 #define CALL_DEBUG_METHOD() do { \
-	/*debug();*/;\
+	debug();\
 } while (0)
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -105,10 +100,11 @@ void DS_struct::FreePokemon(int pokemonID){
 	// get trainer.
 	smart_pointer<trainer>  myTrainer = t_AVL.find(trainerID);
 	// remove pokemon from all 3 trees and delete pokemon
-	if (pokemonID == 253 && level == 236){
+	if (pokemonID == 448 && level == 194){
 		int fucku = 1;
 		fucku++;
 	}
+	CALL_DEBUG_METHOD();
 	myTrainer->tp_AVL.remove(myKey);
 	CALL_DEBUG_METHOD();
 
@@ -286,7 +282,7 @@ void DS_struct::EvolvePokemon(int pokemonID, int evolvedID){
 void DS_struct::UpdateLevels( int stoneCode, int stoneFactor){
 	CALL_DEBUG_METHOD();
 	//if code or factor <1 return invalid input
-	if (stoneCode <= 1 || stoneFactor <= 1){
+	if (stoneCode < 1 || stoneFactor < 1){
 		throw InvalidInput();
 	}
 

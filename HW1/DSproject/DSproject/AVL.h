@@ -102,6 +102,10 @@ public:
 template<class Key, class Data, class Compare>
 class AvlTree {
 public:
+
+	AvlNode<Key, Data>* root;
+
+
 	AvlTree(const Compare& Cmp) : cmp(Cmp), treeSize(0), root(NULL), max_node(NULL){}
 	AvlTree(const AvlTree& a, const AvlTree& b); // O(max(a.treeSize, b.treeSize))
 	AvlTree(const AvlTree&); // O(treeSize)
@@ -137,7 +141,7 @@ public:
 private:
 	Compare cmp;
 	int treeSize;
-	AvlNode<Key, Data>* root;
+	//AvlNode<Key, Data>* root; //TODO: undelete
 	AvlNode<Key, Data>* max_node;
 
 	void destroyTree(AvlNode<Key, Data>*);
@@ -622,7 +626,7 @@ void AvlTree<Key, Data, Compare> ::setNodes(AvlNode<Key, Data>* vNew, AvlNode<Ke
 template<class Key, class Data, class Compare>
 AvlNode<Key, Data>* AvlTree<Key, Data, Compare> ::doRemove(AvlNode<Key, Data>* v){
 	int sons = getNumOfSons(v);
-	bool vIsRoot = (root == NULL);
+	bool vIsRoot = (root == v);
 	AvlNode<Key, Data>** vPtrInParent = vIsRoot ? NULL : findPtrInParent(v);
 	AvlNode<Key, Data>* vNew = NULL;
 	AvlNode<Key, Data>* toFix = NULL;
@@ -635,6 +639,7 @@ AvlNode<Key, Data>* AvlTree<Key, Data, Compare> ::doRemove(AvlNode<Key, Data>* v
 		}
 		else {
 			*vPtrInParent = NULL;
+			toFix = v->parent;
 		}
 		break;
 	case 1:
@@ -647,6 +652,7 @@ AvlNode<Key, Data>* AvlTree<Key, Data, Compare> ::doRemove(AvlNode<Key, Data>* v
 		else{
 			*vPtrInParent = vNew;
 			vNew->parent = v->parent;
+			toFix = v->parent;
 		}
 		break;
 	case 2:
