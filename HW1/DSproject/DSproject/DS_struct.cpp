@@ -3,12 +3,7 @@
 #include "pokemon.h"
 
 void DS_struct::debug() const{
-	if (doDebug){
-		if (pL_AVL.root){
-			pL_AVL.root->left;
-			pL_AVL.root->right;
-		}
-	}
+	
 }
 
 #define CALL_DEBUG_METHOD() do { \
