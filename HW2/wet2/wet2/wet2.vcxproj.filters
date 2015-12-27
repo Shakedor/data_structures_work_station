@@ -27,12 +27,30 @@
     <ClInclude Include="testsMacros.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="hashTable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="library2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Technion_DS.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="student_and_faculty.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dataStructures.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="unionFindTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Technion_DS.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

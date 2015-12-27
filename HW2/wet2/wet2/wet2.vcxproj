@@ -66,11 +66,17 @@
   <ItemGroup>
     <ClInclude Include="AVL.h" />
     <ClInclude Include="dataStructures.h" />
+    <ClInclude Include="hashTable.h" />
+    <ClInclude Include="library2.h" />
+    <ClInclude Include="student_and_faculty.h" />
+    <ClInclude Include="Technion_DS.h" />
     <ClInclude Include="testsMacros.h" />
     <ClInclude Include="UnionFind.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dataStructures.cpp" />
+    <ClCompile Include="main2.cpp" />
+    <ClCompile Include="Technion_DS.cpp" />
     <ClCompile Include="unionFindTest.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
