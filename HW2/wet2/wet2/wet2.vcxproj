@@ -64,6 +64,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AVL.h" />
+    <ClInclude Include="dataStructures.h" />
+    <ClInclude Include="testsMacros.h" />
+    <ClInclude Include="UnionFind.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dataStructures.cpp" />
+    <ClCompile Include="unionFindTest.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

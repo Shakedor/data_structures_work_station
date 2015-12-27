@@ -130,9 +130,14 @@ namespace dataStructures{
 
 			return arr[idx];
 		}
+		dynamicArray() :size(0), counter(0), arr(NULL){};
+		dynamicArray(int initSize):size(initSize),counter(0){
+			if (size <= 0){
+				throw sizeOverFlow();
+			}
 
-		dynamicArray(int initSize=10):size(initSize),counter(0){
 			arr = new data[size];
+
 			for (int i = 0; i < size; i++){
 				arr[i] = NULL;
 			}
