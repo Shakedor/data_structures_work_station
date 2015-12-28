@@ -44,15 +44,8 @@ public:
 };
 
 template<class set, class member>
-UnionFind<set, member>::UnionFind(int size){
-	if (size <= 0){
-		throw sizeOverFlow();
-	}
-	n = size;
-	sizeArr = dynamicArray<int>(n);
-	parentArr = dynamicArray<int>(n);
-	setArr = dynamicArray<set>(n);
-	memberArr = dynamicArray<member>(n);
+UnionFind<set, member>::UnionFind(int size):n(size),setArr(n),memberArr(n),sizeArr(n),parentArr(n){
+
 	for (int i = 0; i < n; i++){
 		sizeArr[i] = 1;
 		parentArr[i] = 0;
@@ -135,17 +128,19 @@ set& UnionFind<set, member>::unionize(int mem1, int mem2){
 		return find(root1);
 	}
 
-	int size1 = sizeArr[mem1], size2 = sizeArr[mem2];
+	int size1 = sizeArr[root1], size2 = sizeArr[root2];
 	
 	if (size1 == size2 || size1>size2){
 		sizeArr[root1] = size1 + size2;
 		sizeArr[root2] = 0;
 		parentArr[root2] = root1;
+
 	}
 	else{
 		sizeArr[root2] = size1 + size2;
 		sizeArr[root1] = 0;
 		parentArr[root1] = root2;
+
 	}
 
 	return find(root1);

@@ -135,14 +135,9 @@ namespace dataStructures{
 			if (size <= 0){
 				throw sizeOverFlow();
 			}
-			data* arro;
-			try{
-				 arro = new data[size];
-			}
-			catch (...){
-				printf("a");
-			}
-			arr = arro;
+
+			arr = new data[size];
+
 
 			for (int i = 0; i < size; i++){
 				arr[i] = NULL;
@@ -151,11 +146,24 @@ namespace dataStructures{
 
 		dynamicArray(dynamicArray<data>& old) :counter(0){
 			size = old.size;
+			counter = old.counter;
 			arr = new data[size];
 			for (int i = 0; i < size; i++){
 				arr[i] = old[i];
 			}
 		}
+
+		dynamicArray& operator=(dynamicArray<data>& old){
+			size = old.size;
+			counter = old.counter;
+			arr = new data[size];
+			for (int i = 0; i < size; i++){
+				arr[i] = old[i];
+			}
+
+			return *this;
+		}
+
 
 		~dynamicArray(){
 			delete[] arr;

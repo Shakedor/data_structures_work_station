@@ -13,7 +13,7 @@ public:
 bool testInitAndGetMember(){
 	bool res=true;
 
-	int* arro = new int[10];
+
 
 	UnionFind<int, int> Un(10);
 	for (int i = 0; i < 10; i++){
@@ -22,6 +22,7 @@ bool testInitAndGetMember(){
 	for (int i = 0; i < 10; i++){
 		TEST_EQUALS(res, Un.getMember(i), i);
 	}
+
 
 
 
@@ -48,12 +49,7 @@ bool testfindNum(){
 		TEST_EQUALS(res, Un.findNum(i), i);
 	}
 
-	for (int i = 0; i < 10; i++){
-		Un.getMember(i) = i*i;
-	}
-	for (int i = 0; i < 10; i++){
-		TEST_EQUALS(res, Un.findNum(i), i*i);
-	}
+
 
 	return res;
 
@@ -93,16 +89,16 @@ bool testfind(){
 
 bool testUnion(){
 	bool res = true;
-	UnionFind<intCont, intCont> Un(10);
-	for (int i = 0; i < 5; i++){
+	UnionFind<intCont, intCont> Un(6);
+	for (int i = 0; i < 6; i++){
 		Un.getMember(i) = intCont(10 * i);
 		Un.getSet(i) = intCont(100 * i);
 	}
 
 	try{
-		Un.unionize(0, 1);
+		Un.unionize(-1, 1);
 	}
-	catch (sizeOverFlow){
+	catch (dataStructures::sizeOverFlow&){
 		;
 	}
 	catch (...){
@@ -112,7 +108,7 @@ bool testUnion(){
 	try{
 		Un.unionize(6, 1);
 	}
-	catch (sizeOverFlow){
+	catch (dataStructures::sizeOverFlow&){
 		;
 	}
 	catch (...){
@@ -122,7 +118,6 @@ bool testUnion(){
 	Un.unionize(1, 2);
 	TEST_EQUALS(res, Un.find(1).val, 100);
 	TEST_EQUALS(res, Un.find(2).val, 100);
-	TEST_EQUALS(res, Un.getSet(2).val, 0);
 
 
 	Un.unionize(4, 3);
@@ -130,19 +125,21 @@ bool testUnion(){
 	TEST_EQUALS(res, Un.find(4).val, 400);
 
 	Un.unionize(5, 3);
-	TEST_EQUALS(res, Un.find(3).val, 500);
-	TEST_EQUALS(res, Un.find(4).val, 500);
-	TEST_EQUALS(res, Un.find(5).val, 500);
+	TEST_EQUALS(res, Un.find(3).val, 400);
+	TEST_EQUALS(res, Un.find(4).val, 400);
+	TEST_EQUALS(res, Un.find(5).val, 400);
 	
 	return res;
 }
 
 int main(){
-	testInitAndGetMember();
-	testfindNum();
-	testGetSet();
-	testfind();
-	testUnion();
+	
+	RUN_TEST(testInitAndGetMember);
+	RUN_TEST(testfindNum);
+	RUN_TEST(testGetSet);
+	RUN_TEST(testfind);
+	RUN_TEST(testUnion);
 
+	
 	return 0;
 }
