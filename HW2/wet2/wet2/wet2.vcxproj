@@ -11,8 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{59FF0E51-CE08-4877-A7C0-492B6B1DA95F}</ProjectGuid>
-    <RootNamespace>DSproject</RootNamespace>
+    <ProjectGuid>{BCC27069-10DD-4689-9149-518F513CB7F9}</ProjectGuid>
+    <RootNamespace>wet2</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -38,15 +38,14 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Users\Shaked\Desktop\Courses\semester 3\234218 - מבני נתונים 1\workstation\data_structures_work_station\HW1\DSproject\DSproject;$(IncludePath)</IncludePath>
-  </PropertyGroup>
+  <PropertyGroup />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -69,20 +68,17 @@
   <ItemGroup>
     <ClInclude Include="AVL.h" />
     <ClInclude Include="dataStructures.h" />
-    <ClInclude Include="DS_struct.h" />
-    <ClInclude Include="library1.h" />
-    <ClInclude Include="pokemon.h" />
+    <ClInclude Include="hashTable.h" />
+    <ClInclude Include="library2.h" />
+    <ClInclude Include="student_and_faculty.h" />
+    <ClInclude Include="Technion_DS.h" />
     <ClInclude Include="testsMacros.h" />
-    <ClInclude Include="trainer.h" />
+    <ClInclude Include="UnionFind.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dataStructures.cpp" />
-    <ClCompile Include="DS_struct.cpp" />
-    <ClCompile Include="DS_test.cpp" />
-    <ClCompile Include="library1.cpp" />
-    <ClCompile Include="main1.cpp" />
-    <ClCompile Include="pokemon.cpp" />
-    <ClCompile Include="trainer.cpp" />
+    <ClCompile Include="Technion_DS.cpp" />
+    <ClCompile Include="unionFindTest.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

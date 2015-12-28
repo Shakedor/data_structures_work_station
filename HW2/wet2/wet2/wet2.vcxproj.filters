@@ -15,48 +15,39 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="pokemon.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="trainer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="AVL.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="testsMacros.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="library1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="dataStructures.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DS_struct.h">
+    <ClInclude Include="UnionFind.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="testsMacros.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hashTable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="library2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Technion_DS.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="student_and_faculty.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main1.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="trainer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DS_test.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="library1.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="pokemon.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DS_struct.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="dataStructures.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="unionFindTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Technion_DS.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

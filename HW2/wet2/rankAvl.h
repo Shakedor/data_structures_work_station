@@ -1,6 +1,6 @@
 
-#ifndef AVL_H_
-#define AVL_H_
+#ifndef RANKTREE_H_
+#define RANKTREE_H_
 
 #include <cstdlib>
 #include <cassert>
@@ -62,9 +62,11 @@ public:
 	AvlNode* parent;
 	int height;
 	int bf;
+	int successors;
 
 	AvlNode(const Key& key, const Data& data, AvlNode* parent = NULL) : keyPtr(NULL),
-			dataPtr(NULL), left(NULL), right(NULL), parent(parent), height(0), bf(0) {
+			dataPtr(NULL), left(NULL), right(NULL), parent(parent), height(0), bf(0),
+			successors(0){
 		try {
 			keyPtr = new Key(key);
 			dataPtr = new Data(data);
@@ -73,7 +75,8 @@ public:
 			throw std::bad_alloc();
 		}
 	}
-	explicit AvlNode() : keyPtr(NULL), dataPtr(NULL), left(NULL), right(NULL), parent(NULL), height(0), bf(0) {}
+	explicit AvlNode() : keyPtr(NULL), dataPtr(NULL), left(NULL), right(NULL),
+			parent(NULL), height(0), bf(0), successors(0){}
 	~AvlNode(){
 		delete(keyPtr);
 		delete(dataPtr);
@@ -122,6 +125,9 @@ public:
 	Data& get_max();
 	int get_size() const;
 
+	// Functionality of a rank tree
+	int rank(const Key& key) const;
+
 	// Calls op(data) for every object.
 	template<class Operation> void preorder(Operation& op); // op(key,data)
 	template<class Operation> void inorder(Operation& op);
@@ -129,8 +135,6 @@ public:
 
 	template<class printKey, class printData> void printAvlRecursive(AvlNode<Key, Data>* v, int depth, printKey&, printData&);
 	template<class printKey, class printData> void printAvl(printKey&, printData&);
-	void printAvlRecursiveInt(AvlNode<Key, Data>* v, int depth);
-	void printAvlInt();
 
 	typedef struct element{
 		Key* keyPtr;
@@ -152,6 +156,7 @@ private:
 	AvlNode<Key, Data>* doRemove(AvlNode<Key, Data>*);
 	void fixPath(AvlNode<Key, Data>* v);
 
+	AvlNode<Key, Data>* do_find_helper(const Key& key, int* rankPtr) const;
 	AvlNode<Key, Data>* do_find(const Key& key) const;
 	AvlNode<Key, Data>** findPtrInParent(AvlNode<Key, Data>*);
 
@@ -189,6 +194,10 @@ void AvlNode<Key, Data> :: updateNodeInfo(){
 	int hRight = right ? right->height : -1;
 	height = max(hLeft, hRight) + 1;
 	bf = hLeft - hRight;
+
+	int leftSuccessors = left ? (left->successors)+1 : 0;
+	int rightSuccessors = right ? (right->successors)+1 : 0;
+	successors = leftSuccessors + rightSuccessors;
 }
 
 template<class Key, class Data>
@@ -475,10 +484,11 @@ void AvlTree<Key, Data, Compare> :: destroyTree(AvlNode<Key, Data>* v){
 //////	AvlTree find methods	//////
 //////////////////////////////////////
 
-//If data is found - returns a pointer to its node.
+//If data is found - returns a pointer to its node and updates "rankPtr".
 //If data isn't found - returns a pointer to its 'wanna-be' parent
 template<class Key, class Data, class Compare>
-AvlNode<Key, Data>* AvlTree<Key, Data, Compare> :: do_find(const Key& key)const{
+AvlNode<Key, Data>* AvlTree<Key, Data, Compare> :: do_find_helper(const Key& key,
+		int* rankPtr)const{
 	if (!root){
 		throw dataStructures::sturctIsEmpty();
 	}
@@ -486,13 +496,22 @@ AvlNode<Key, Data>* AvlTree<Key, Data, Compare> :: do_find(const Key& key)const{
 	AvlNode<Key, Data>* next = NULL; //Pointer to left\right field (which is also a pointer) of current
 	bool found = false;
 
+	*rankPtr = 1;
 	while (!found) {
 		switch (cmp(key, *current->keyPtr)){
 		case 0:
 			found = true;
+			{
+				int rightSuccessors = current->right ? (current->right->successors + 1) : 0;
+				*rankPtr += rightSuccessors;
+			}
 			break;
 		case 1:
 			next = current->left;
+			{
+				int rightSuccessors = current->right ? (current->right->successors + 1) : 0;
+				*rankPtr += rightSuccessors + 1; // "+1" is for "current"
+			}
 			break;
 		case -1:
 			next = current->right;
@@ -508,6 +527,14 @@ AvlNode<Key, Data>* AvlTree<Key, Data, Compare> :: do_find(const Key& key)const{
 	}
 
 	return current;	//Address of the new leaf
+}
+
+//If data is found - returns a pointer to its node and updates "rankPtr".
+//If data isn't found - returns a pointer to its 'wanna-be' parent
+template<class Key, class Data, class Compare>
+AvlNode<Key, Data>* AvlTree<Key, Data, Compare> :: do_find(const Key& key) const{
+	int unusedRank = 0;
+	return do_find_helper(key, &unusedRank);
 }
 
 //Finds the pointer to v in the parent of v.
@@ -544,6 +571,17 @@ int AvlTree<Key, Data, Compare> :: get_size() const{
 	assert(treeSize >= 0);
 	return treeSize;
 }
+
+template<class Key, class Data, class Compare>
+int AvlTree<Key, Data, Compare> :: rank(const Key& key) const{
+	int rank = 0;
+	AvlNode<Key, Data>* v = do_find_helper(key, &rank);
+	if (cmp(key, *v->keyPtr) == 0){
+		return rank;
+	}
+	throw dataStructures::dataDoesNotExist();
+}
+
 
 //////////////////////////////////////////////
 //////	AvlTree updateMaxNode method	//////
@@ -636,8 +674,6 @@ void AvlTree<Key, Data, Compare> ::setNodes(AvlNode<Key, Data>* vNew, AvlNode<Ke
 	vNew->set_parent(vOld->parent, findPtrInParent(vOld));
 }
 
-
-
 //Returns new root
 template<class Key, class Data, class Compare>
 AvlNode<Key, Data>* AvlTree<Key, Data, Compare> ::doRemove(AvlNode<Key, Data>* v){
@@ -717,10 +753,10 @@ void AvlTree<Key, Data, Compare> :: remove(const Key& key){
 }
 
 // insert/remove actions may have unwanted side effects on the insert/remove path:
-//		- errors (incorrect bf and height)
+//		- errors (incorrect bf, height and successors)
 //		- |bf| = 2. This means the tree is no longer avl tree.
 // This method passes on the insert/remove path (upwards) and:
-//		- Updates height and bf of every node.
+//		- Updates height, bf and successors of every node.
 //		- For any node that has |BF| = 2, it fixes it by rolling the node. (See "roll")
 template<class Key, class Data, class Compare>
 void AvlTree<Key, Data, Compare> :: fixPath(AvlNode<Key, Data>* v){
@@ -921,6 +957,7 @@ void AvlTree<Key, Data, Compare> ::printAvlRecursive(AvlNode<Key, Data>* v, int 
 		std::cout << "Avl is empty!! << std::endl" << std::endl;
 	} else{
 		printK(*(v->keyPtr));
+		std::cout << ",";
 		printD(*(v->dataPtr));
 		std::cout << std::endl;
 	}
@@ -928,8 +965,9 @@ void AvlTree<Key, Data, Compare> ::printAvlRecursive(AvlNode<Key, Data>* v, int 
 }
 
 template<class Key, class Data, class Compare>
-void AvlTree<Key, Data, Compare> :: printAvlInt(){
-	printAvlRecursive(root, 0);
+template<class printKey, class printData>
+void AvlTree<Key, Data, Compare> :: printAvl(printKey& printK, printData& printD){
+	printAvlRecursive(root, 0, printK, printD);
 }
 
-#endif /* AVL_H_ */
+#endif /* RANKTREE_H_ */
