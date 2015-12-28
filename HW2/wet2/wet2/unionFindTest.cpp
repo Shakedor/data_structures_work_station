@@ -12,7 +12,10 @@ public:
 
 bool testInitAndGetMember(){
 	bool res=true;
-	UnionFind<int, int> Un=UnionFind<int,int>(10);
+
+	int* arro = new int[10];
+
+	UnionFind<int, int> Un(10);
 	for (int i = 0; i < 10; i++){
 		Un.getMember(i) = i;
 	}
@@ -20,7 +23,9 @@ bool testInitAndGetMember(){
 		TEST_EQUALS(res, Un.getMember(i), i);
 	}
 
-	UnionFind<int, intCont> Uni = UnionFind<int, intCont>(10);
+
+
+	UnionFind<int, intCont> Uni(10);
 	for (int i = 0; i < 10; i++){
 		Uni.getMember(i) = intCont(10 * i);
 	}
@@ -35,7 +40,7 @@ bool testInitAndGetMember(){
 
 bool testfindNum(){
 	bool res=true;
-	UnionFind<int, int> Un = UnionFind<int, int>(10);
+	UnionFind<int, int> Un(10);
 	for (int i = 0; i < 10; i++){
 		Un.getMember(i) = i;
 	}
@@ -58,7 +63,7 @@ bool testfindNum(){
 
 bool testGetSet(){
 	bool res = true;
-	UnionFind<intCont, intCont> Un = UnionFind<intCont, intCont>(10);
+	UnionFind<intCont, intCont> Un(10);
 	for (int i = 0; i < 10; i++){
 		Un.getMember(i) = intCont(10 * i);
 		Un.getSet(i) = intCont(100 * i);
@@ -72,7 +77,7 @@ bool testGetSet(){
 
 bool testfind(){
 	bool res = true;
-	UnionFind<intCont, intCont> Un = UnionFind<intCont, intCont>(10);
+	UnionFind<intCont, intCont> Un(10);
 	for (int i = 0; i < 10; i++){
 		Un.getMember(i) = intCont(10 * i);
 		Un.getSet(i) = intCont(100 * i);
@@ -88,7 +93,7 @@ bool testfind(){
 
 bool testUnion(){
 	bool res = true;
-	UnionFind<intCont, intCont> Un = UnionFind<intCont, intCont>(10);
+	UnionFind<intCont, intCont> Un(10);
 	for (int i = 0; i < 5; i++){
 		Un.getMember(i) = intCont(10 * i);
 		Un.getSet(i) = intCont(100 * i);
@@ -117,7 +122,7 @@ bool testUnion(){
 	Un.unionize(1, 2);
 	TEST_EQUALS(res, Un.find(1).val, 100);
 	TEST_EQUALS(res, Un.find(2).val, 100);
-	TEST_EQUALS(res, Un.getSet(2).val, NULL);
+	TEST_EQUALS(res, Un.getSet(2).val, 0);
 
 
 	Un.unionize(4, 3);

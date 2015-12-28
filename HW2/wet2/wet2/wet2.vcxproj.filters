@@ -47,9 +47,6 @@
     <ClCompile Include="unionFindTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main2.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Technion_DS.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

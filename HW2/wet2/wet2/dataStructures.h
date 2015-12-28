@@ -135,8 +135,14 @@ namespace dataStructures{
 			if (size <= 0){
 				throw sizeOverFlow();
 			}
-
-			arr = new data[size];
+			data* arro;
+			try{
+				 arro = new data[size];
+			}
+			catch (...){
+				printf("a");
+			}
+			arr = arro;
 
 			for (int i = 0; i < size; i++){
 				arr[i] = NULL;
@@ -166,7 +172,7 @@ namespace dataStructures{
 			data* temparr = new data[newSize];
 			int minSize = (size < newSize) ? size : newSize;
 
-			for (int i = 0; i < minSize < i++){
+			for (int i = 0; i < minSize; i++){
 				temparr[i] = arr[i];
 			}
 			for (int i = minSize; i < newSize; i++){

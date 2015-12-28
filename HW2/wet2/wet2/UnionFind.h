@@ -153,4 +153,4 @@ set& UnionFind<set, member>::unionize(int mem1, int mem2){
 }
 
 
-#endif UNION_FIND_
+#endif //UNION_FIND_
