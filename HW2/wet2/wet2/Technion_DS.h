@@ -17,7 +17,7 @@ class Technion{
 	hashTable<int, Student, idCompare, studentHasher> studentHash;
 	UnionFind<Faculty, studyGroup> facultySets;
 
-
+	int getCorrectSet(int studyGroup);
 public:
 	Technion(int n);
 	~Technion();

@@ -10,7 +10,7 @@ public:
 
 class Faculty{
 public:
-	Student bestStudent;
+	int bestStudentID;
 };
 
 class studyGroup{
