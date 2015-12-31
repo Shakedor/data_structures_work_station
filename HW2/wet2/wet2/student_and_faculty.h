@@ -5,11 +5,18 @@ class Student{
 public:
 	int studentID;
 	int average;
+	int studyGroup
 };
 
 class Faculty{
 public:
 	Student bestStudent;
+};
+
+class studyGroup{
+public:
+	int myFaculty;
+	studyGroup() :myFaculty(-1){}
 };
 
 class Student_Comparison{
@@ -33,6 +40,25 @@ public:
 			}
 		}
 	}
+};
+
+class idCompare{
+public:
+	int operator () (int a, int b){
+		if (a > b){
+			return 1;
+		}
+		else if(a< b){
+			return -1;
+		}
+		else{
+			return 0;
+		}
+	}
+};
+
+class studentHasher{
+
 };
 
 #endif // !STUDENT_FACULTY_

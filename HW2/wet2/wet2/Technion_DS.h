@@ -5,13 +5,19 @@
 #include <cassert>
 #include "dataStructures.h"
 #include <cmath>
-#include "rankTree.h"
+#include "rankAvl.h"
 #include "hashTable.h"
 #include "UnionFind.h"
 #include "library2.h"
+#include "student_and_faculty.h"
 
 class Technion{
-	
+	int bucket[101];
+	AvlTree<int, Student, idCompare> studentTree;
+	hashTable<int, Student, idCompare, studentHasher> studentHash;
+	UnionFind<Faculty, studyGroup> facultySets;
+
+
 public:
 	Technion(int n);
 	~Technion();

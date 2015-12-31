@@ -5,7 +5,7 @@
 #include <cassert>
 #include "DataStructures.h"
 #include <cmath>
-#include "rankTree.h"
+#include "rankAvl.h"
 
 using namespace dataStructures;
 

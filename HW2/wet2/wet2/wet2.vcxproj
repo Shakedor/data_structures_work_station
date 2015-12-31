@@ -66,10 +66,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="AVL.h" />
     <ClInclude Include="dataStructures.h" />
     <ClInclude Include="hashTable.h" />
     <ClInclude Include="library2.h" />
+    <ClInclude Include="rankAvl.h" />
     <ClInclude Include="student_and_faculty.h" />
     <ClInclude Include="Technion_DS.h" />
     <ClInclude Include="testsMacros.h" />
@@ -77,6 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dataStructures.cpp" />
+    <ClCompile Include="technionTest.cpp" />
     <ClCompile Include="Technion_DS.cpp" />
     <ClCompile Include="unionFindTest.cpp" />
   </ItemGroup>
