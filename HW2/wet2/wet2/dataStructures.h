@@ -14,8 +14,10 @@ namespace dataStructures{
 	class dataAlreadyExists : public failureExceptions {};
 	class dataDoesNotExist : public failureExceptions {};
 	class stucountertIsEmpty : public failureExceptions {};
+	class badParameter : public failureExceptions {};
 	class sizeOverFlow : public failureExceptions {};
 	class sturctIsEmpty : public dataDoesNotExist{};
+	class dataAlreadyAssigned : public failureExceptions {};
 
 	class counter{
 		int number;
