@@ -289,8 +289,8 @@ static bool testTechnionGetFaculty(){
 	ASSERT_EXCEPTION_THROWN(technion.GetFaculty(-1, NULL), badParameter);
 
 	// student_ID does not exist
-	ASSERT_EXCEPTION_THROWN(technion.GetFaculty(NUMBER_OF_STUDENTS, &faculty), dataDoesNotExist);
 	ASSERT_EXCEPTION_THROWN(technion.GetFaculty(NUMBER_OF_STUDENTS+1, &faculty), dataDoesNotExist);
+	ASSERT_EXCEPTION_THROWN(technion.GetFaculty(NUMBER_OF_STUDENTS+2, &faculty), dataDoesNotExist);
 
 	// student_ID is not assigned to a faculty
 	ASSERT_EXCEPTION_THROWN(technion.GetFaculty(0, &faculty), dataDoesNotExist);
@@ -432,7 +432,6 @@ static bool testTechnionUpgradeStudyGroup(){
 	}
 
 	// upgradeStudyGroup 1 and check correct max (30,40)
-	ASSERT_EXCEPTION_THROWN(technion.UpgradeStudyGroup(2, 2), badParameter);
 	ASSERT_NO_EXCEPTION_THROWN(technion.GetSmartestStudent(2, &smartestID));
 	ASSERT_TEST(smartestID == 4);
 

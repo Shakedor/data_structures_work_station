@@ -132,7 +132,7 @@ bool testUnion(){
 	return res;
 }
 
-int main(){
+int main2(){
 	
 	RUN_TEST(testInitAndGetMember);
 	RUN_TEST(testfindNum);

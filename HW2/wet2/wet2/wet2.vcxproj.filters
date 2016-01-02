@@ -47,6 +47,9 @@
     <ClCompile Include="unionFindTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="student_and_faculty.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Technion_DS.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

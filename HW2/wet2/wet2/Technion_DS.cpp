@@ -2,41 +2,86 @@
 #include "Technion_DS.h"
 using namespace dataStructures;
 
-Technion::Technion(int n){
+Technion::Technion(int n) : n(n),bucket(NULL), studentTree(idCompare()), 
+	studentHash(studentHasher(), idCompare(), studentHasher().startingModulu),
+	facultySets(n){
 	//initialize bucket to zero
+	bucket = new int[101];
+	for (int i = 0; i < 101; ++i){
+		bucket[i] = 0;
+	}
 	//make empty tree
 	//make hashtable of a constant size (for example 10)
 	//make the facultySets with size n
+	//initialize faculty in studyGroups
+	for (int i = 0; i < n; i++){
+		facultySets.getMember(i).myFaculty = i;
+	}
 }
 
 Technion::~Technion(){
 	//call all destructors
-
+	delete[](bucket);
 }
 
 void  Technion::AddStudent(int studentID, int average){
 	//check valid conditions
 	// average between 0 and 100 including
 	// studentID not <0
-	//student ID is not in student Tree already
+	//student ID is not in student Tree already - checked in insertion to tree
+	if (average < 0 || average > 100 || studentID < 0){
+		throw badParameter();
+	}
 
 	//if all is good
 	//create a sharedpointer to student
 	//add it to tree
 	//add it to hash
 	//add 1 to bucket[counter]
+	smart_pointer<Student> studentPtr(new Student);
+	studentPtr->average = average;
+	studentPtr->studentID = studentID;
+	studentPtr->studyGroup = UNINITIALIZED_STUDY_GROUP;
 
-
+	studentTree.insert(studentID, studentPtr);
+	studentHash.insert(studentID, studentPtr);
+	++bucket[average];
 }
+
 void  Technion::AssignStudent(int studentID, int studyGroup){
 	//check params
 	//study group out of bounds
 	//bad student id num
-	// student ID does not exist in hash
+	// student ID does not exist in hash - checked in tree.find
+	if (studentID < 0 || studyGroup < 0 || studyGroup >= n){
+		throw badParameter();
+	}
+	smart_pointer<Student> studentPtr = studentTree.find(studentID);
 
-	//if student exist and valid group, change the student's groupt to studygroup param
+	//if student exist and valid group, change the student's group to studygroup param
+	if (studentPtr->studyGroup == studyGroup){//same study group do nothing
+		return;
+	}
+	if (studentPtr->studyGroup != UNINITIALIZED_STUDY_GROUP){
+		throw dataAlreadyAssigned();
+	}
+	studentPtr->studyGroup = studyGroup;
+
 	// go to the study groups faculty, get top student. update top student
+	Faculty& myFaculty = facultySets.getSet(getCorrectSet(studyGroup));
+
+	if (!myFaculty.bestStudent){//no Best student
+		myFaculty.bestStudent = studentPtr;
+	}
+	else{
+		if (studentCompare(*studentPtr, *myFaculty.bestStudent) ==1){
+			myFaculty.bestStudent = studentPtr;
+		}
+
+	}
+
 }
+
 void  Technion::JoinFaculties(int studyGroup1, int studyGroup2){
 	//check params
 	//study groups in bounds
@@ -53,7 +98,8 @@ void  Technion::JoinFaculties(int studyGroup1, int studyGroup2){
 
 
 	//if all is valid
-	
+	//update max student
+
 	//check studygroup2's faculty as not valid;
 	Faculty& faculty2 = facultySets.getSet(facultyNum2);
 	faculty2.isFaculty = false;
@@ -72,15 +118,28 @@ void  Technion::GetFaculty(int studentID, int* faculty){
 	//params
 	// check student is not negative
 	//faculty is not NULL
-	//student exist in studetn hash
+	if (faculty == NULL || studentID < 0){
+		throw badParameter();
+	}
+
+	//if student deos not exist, search will throw dataDoesNotExist
 
 	//if all is valid
 	//get student from hash
+	smart_pointer<Student> myStud = studentHash.search(studentID);
 	//get his study group
+	//if no study group throw data does not exist
+	if (myStud->studyGroup == UNINITIALIZED_STUDY_GROUP){
+		throw dataDoesNotExist();
+	}
+
 
 	//get its faculty number (remmeber the faculty number o=in the root group)
+	int facultyNum = getCorrectSet(myStud->studyGroup);
 
+	*faculty = facultyNum;
 }
+
 void  Technion::UnifyFacultiesByStudents(int studentID1, int studentID2){
 	//params
 	//student names out of bound
@@ -151,33 +210,65 @@ void  Technion::UpgradeStudyGroup(int studyGroup, int factor){
 
 	if (sizeOfGroup != 0){//only update smartest if group had students
 		//get faculty of study group (using getCorrectSet)
-		//if the max updated student is ssmarted than old smartest student, update 
+		Faculty& currFaculy = facultySets.getSet(getCorrectSet(studyGroup));
+		//if the max updated student is smarter than old smartest student, update 
 		//smartest student.
+		if (!currFaculy.bestStudent){//no Best student
+			currFaculy.bestStudent= smartest;
+		}
+		else{
+			smart_pointer<Student> currSmartest = currFaculy.bestStudent;
+			if (studentCompare(*smartest, *currSmartest) == 1){//smartest is smarter
+				currFaculy.bestStudent= smartest;
+			}
+		}
 
 	}
 
 
 }
+
 void  Technion::GetSmartestStudent(int facultyID, int* student){
 	//params
 	//is student NULL
+	if (student == NULL){
+		throw badParameter();
+	}
 	//is faculty ID out of bounds
+	if (facultyID < 0 || facultyID >= n){
+		throw badParameter();
+	}
 
 	//failure
 	//is faculty valid (not a sub faculty)
 	// is faculty empty (meaning no smartest student)
+	Faculty& currFaculty = facultySets.getSet(facultyID);
+	if (currFaculty.isFaculty == false || !currFaculty.bestStudent){
+		throw dataDoesNotExist();
+	}
 
 	//if faculty is legit, get its smartest student ID
+	*student = currFaculty.bestStudent->studentID;
+
 }
+
 void  Technion::GetNumOfStudentsInRange(int fromAvg, int toAvg, int* num){
 	//params
 	// int is not null
 	//from is not equal or greater than to
 	//from and to are not out of bounds
+	if (num == NULL || fromAvg >= toAvg || fromAvg<0 || toAvg>100){
+		throw badParameter();
+	}
 
 	//if all is valid
 	//sum the counts of bucket[from] to bucket[to] including
+	int sum = 0;
+	for (int i = fromAvg; i < toAvg + 1; i++){
+		sum += bucket[i];
+	}
 
+	*num = sum;
 }
 
 

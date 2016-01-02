@@ -1,49 +1,37 @@
 #ifndef STUDENT_FACULTY_
 #define STUDENT_FACULTY_
 
+#include "dataStructures.h"
+
+static const int UNINITIALIZED_STUDY_GROUP = -1;
+
+
 class Student{
 public:
 	int studentID;
 	int average;
 	int studyGroup;
 
-	Student() :studyGroup(-1){}
+	Student() : studyGroup(-1){}
 };
 
 class Faculty{
 public:
-	int bestStudentID;
+	smart_pointer<Student> bestStudent;
 	bool isFaculty;
 
-	Faculty() :bestStudentID(-1), isFaculty(true){}
+	Faculty() : isFaculty(true), bestStudent(NULL){}
 };
 
 class StudyGroup{
 public:
 	int myFaculty;
-	StudyGroup() :myFaculty(-1){}
+	StudyGroup() : myFaculty(-1){}
 };
 
 
-int studentCompare(Student stud1, Student stud2){
-	if (stud1.average > stud2.average){
-		return 1;
-	}
-	else if (stud1.average < stud2.average){
-		return -1;
-	}
-	else{
-		if (stud1.studentID < stud2.studentID){
-			return 1;
-		}
-		else if (stud1.studentID>stud2.studentID){
-			return -1;
-		}
-		else{
-			return 0;
-		}
-	}
-}
+int studentCompare(Student stud1, Student stud2);
+
 
 class Student_Comparison{
 public:
@@ -56,7 +44,7 @@ public:
 
 class idCompare{
 public:
-	int operator () (int a, int b){
+	int operator () (const int a,const int b)const{
 		if (a > b){
 			return 1;
 		}
@@ -69,8 +57,19 @@ public:
 	}
 };
 
-class studentHasher{
+class studentHasher {
+	int modulu;
+public:
+	static const int startingModulu = 10;
+	studentHasher() : modulu(startingModulu){}
+	studentHasher(const studentHasher& hasher) : modulu(hasher.modulu){}
 
+	int operator() (int x){
+		return x%modulu;
+	}
+	void setRange(int newRange){
+		modulu = newRange;
+	}
 };
 
 #endif // !STUDENT_FACULTY_

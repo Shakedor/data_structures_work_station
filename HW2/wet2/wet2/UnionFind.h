@@ -24,14 +24,13 @@ template<class set, class member>
 class UnionFind{
 	int n;
 	
-	dynamicArray<set> setArr;
-	dynamicArray<member> memberArr;
-	dynamicArray<int> sizeArr;
-	dynamicArray<int> parentArr;
+	set* setArr;
+	member* memberArr;
+	int* sizeArr;
+	int* parentArr;
 
 public:
-	UnionFind() :n(NULL){};
-	UnionFind(int size);
+	explicit UnionFind(int size = 0); // TODO : check protected for size == 0
 	~UnionFind();
 	// get the ith member in the member array
 	member& getMember(int i);
@@ -49,13 +48,22 @@ public:
 };
 
 template<class set, class member>
-UnionFind<set, member>::UnionFind(int size):n(size),setArr(n),memberArr(n),sizeArr(n),parentArr(n){
+UnionFind<set, member>::UnionFind(int size):n(size),setArr(NULL),memberArr(NULL),sizeArr(NULL),parentArr(NULL){
+	if (size <= 0){
+		throw sizeOverFlow();
+	}
+
+
+	setArr = new set[n];
+	memberArr = new member[n];
+	sizeArr = new int[n];
+	parentArr = new int[n];
 
 	for (int i = 0; i < n; i++){
 		sizeArr[i] = 1;
-		parentArr[i] = 0;
-		memberArr[i] = member();
-		setArr[i] = set();
+		parentArr[i] = -1;
+		//memberArr[i] = member();
+		//setArr[i] = set();
 	}
 
 }
@@ -67,6 +75,11 @@ UnionFind<set, member>::~UnionFind(){
 		memberArr[i].~member();
 		setArr[i].~set();
 	}
+
+	delete[] setArr;
+	delete[] memberArr;
+	delete[] sizeArr;
+	delete[] parentArr;
 	
 }
 
@@ -97,7 +110,7 @@ int UnionFind<set, member>::findNum(int memNum){
 	int parentNum = parentArr[memNum];
 	
 	//if root node, return itself
-	if (parentNum == 0){
+	if (parentNum == -1){
 		return memNum;
 	}
 	

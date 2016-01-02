@@ -50,12 +50,12 @@ namespace dataStructures{
 		data* dataPointer;
 		counter* Counter;
 	public:
-		smart_pointer() : dataPointer(NULL){
+		smart_pointer() : dataPointer(NULL),Counter(NULL){
 			Counter = new counter();
 			Counter->increment();
 		}
 
-		smart_pointer(data* dataP) : dataPointer(dataP){
+		explicit smart_pointer(data* dataP) : dataPointer(dataP),Counter(NULL){
 			 
 			Counter = new counter();
 			Counter->increment();
@@ -107,6 +107,15 @@ namespace dataStructures{
 			}
 			return *this;
 		}
+
+		bool operator!(){
+			if (dataPointer == NULL){
+				return true;
+			}
+			return false;
+		}
+
+
 
 
 
@@ -168,6 +177,16 @@ namespace dataStructures{
 
 			return arr[idx];
 		}
+		dynamicArray& operator=(dynamicArray<data>& old){
+			size = old.size;
+			counter = old.counter;
+			arr = new data[size];
+			for (int i = 0; i < size; i++){
+				arr[i] = old[i];
+			}
+
+			return *this;
+		}
 		dynamicArray() :size(0), counter(0), arr(NULL){};
 		dynamicArray(int initSize):size(initSize),counter(0){
 			if (size <= 0){
@@ -176,10 +195,6 @@ namespace dataStructures{
 
 			arr = new data[size];
 
-
-			for (int i = 0; i < size; i++){
-				arr[i] = NULL;
-			}
 		}
 
 		dynamicArray(dynamicArray<data>& old) :counter(0){
@@ -191,16 +206,7 @@ namespace dataStructures{
 			}
 		}
 
-		dynamicArray& operator=(dynamicArray<data>& old){
-			size = old.size;
-			counter = old.counter;
-			arr = new data[size];
-			for (int i = 0; i < size; i++){
-				arr[i] = old[i];
-			}
 
-			return *this;
-		}
 
 
 		~dynamicArray(){
