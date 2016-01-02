@@ -53,6 +53,10 @@ void  Technion::JoinFaculties(int studyGroup1, int studyGroup2){
 
 
 	//if all is valid
+	
+	//check studygroup2's faculty as not valid;
+	Faculty& faculty2 = facultySets.getSet(facultyNum2);
+	faculty2.isFaculty = false;
 
 	//put in both roots the number of group1's faculty
 	StudyGroup& root1 = facultySets.getMember(facultySets.findNum(studyGroup1));
@@ -97,6 +101,8 @@ void  Technion::UnifyFacultiesByStudents(int studentID1, int studentID2){
 	JoinFaculties(stud1->studyGroup, stud2->studyGroup);
 
 }
+
+
 void  Technion::UpgradeStudyGroup(int studyGroup, int factor){
 	//params
 	//group is out of bound
@@ -109,7 +115,6 @@ void  Technion::UpgradeStudyGroup(int studyGroup, int factor){
 	// create a student save functor that saves the shared pointer of every student 
 	treeSaver<int, smart_pointer<Student>> studentArr(studentTree.get_size());
 	studentTree.inorder(studentArr);
-
 
 	smart_pointer<Student> smartest=smart_pointer<Student>();
 	int sizeOfGroup = 0;
@@ -126,9 +131,10 @@ void  Technion::UpgradeStudyGroup(int studyGroup, int factor){
 		// decremenet student's average bucket
 		bucket[currStud->average]--;
 		//multiply students average by factor (or min 100)
-		
-
+		currStud->average *= factor;
+		currStud->average =(100<currStud->average)?100:currStud->average; 
 		//increment bucket with new average
+		bucket[currStud->average]++;
 
 
 		// save maximum student of studyGroup
@@ -141,14 +147,15 @@ void  Technion::UpgradeStudyGroup(int studyGroup, int factor){
 				smartest = currStud;
 			}
 		}
-		
+	}
+
+	if (sizeOfGroup != 0){//only update smartest if group had students
+		//get faculty of study group (using getCorrectSet)
+		//if the max updated student is ssmarted than old smartest student, update 
+		//smartest student.
 
 	}
 
-
-	//get faculty of study group (note special usage mentioned above)
-	//if the max updated student is ssmarted than old smartest student, update 
-	//smartest student.
 
 }
 void  Technion::GetSmartestStudent(int facultyID, int* student){

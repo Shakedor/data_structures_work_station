@@ -13,6 +13,9 @@ public:
 class Faculty{
 public:
 	int bestStudentID;
+	bool isFaculty;
+
+	Faculty() :bestStudentID(-1), isFaculty(true){}
 };
 
 class StudyGroup{

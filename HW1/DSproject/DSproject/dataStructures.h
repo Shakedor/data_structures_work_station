@@ -119,9 +119,5 @@ namespace dataStructures{
 
 
 
-int minInt(int a, int b){
-	return (a < b) ? a : b;
-}
-
 
 #endif  /* DAT_STRUCT */
