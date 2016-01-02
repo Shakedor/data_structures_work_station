@@ -507,9 +507,9 @@ static bool testTechnionGetSmartestStudent(){
 	// Faculty 2 does not exist anymore
 	ASSERT_EXCEPTION_THROWN(technion.GetSmartestStudent(2, &smartestID), dataDoesNotExist);
 
-	// Check smartes student is 7
+	// Check smartes student is 8
 	ASSERT_NO_EXCEPTION_THROWN(technion.GetSmartestStudent(1, &smartestID));
-	ASSERT_TEST(smartestID == 7);
+	ASSERT_TEST(smartestID == 8);
 
 	//Add studentId 9 to studyGroup 2
 	ASSERT_NO_EXCEPTION_THROWN(technion.AssignStudent(9, 2));
@@ -544,12 +544,12 @@ static bool testTechnionGetNumOfStudentsInRange(){
 
 		//Num of students
 		ASSERT_EXCEPTION_THROWN(technion.GetNumOfStudentsInRange(0, 100, &studentsInRange), badParameter);
-		ASSERT_TEST(studentsInRange == id);
+		ASSERT_TEST(studentsInRange == id+1);
 	}
 
 	for (int id=0; id<NUMBER_OF_STUDENTS ; ++id){
 		ASSERT_EXCEPTION_THROWN(technion.GetNumOfStudentsInRange(0, 10*id, &studentsInRange), badParameter);
-		ASSERT_TEST(studentsInRange == id);
+		ASSERT_TEST(studentsInRange == id+1);
 	}
 
 	// Add students to study groups

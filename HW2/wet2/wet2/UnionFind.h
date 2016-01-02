@@ -49,7 +49,7 @@ public:
 
 template<class set, class member>
 UnionFind<set, member>::UnionFind(int size):n(size),setArr(NULL),memberArr(NULL),sizeArr(NULL),parentArr(NULL){
-	if (size <= 0){
+	if (size <= 1){
 		throw sizeOverFlow();
 	}
 
@@ -71,10 +71,10 @@ UnionFind<set, member>::UnionFind(int size):n(size),setArr(NULL),memberArr(NULL)
 template<class set, class member>
 UnionFind<set, member>::~UnionFind(){
 
-	for (int i = 0; i < n; i++){
+/*	for (int i = 0; i < n; i++){
 		memberArr[i].~member();
 		setArr[i].~set();
-	}
+	}*/ //TODO check no memory leak
 
 	delete[] setArr;
 	delete[] memberArr;

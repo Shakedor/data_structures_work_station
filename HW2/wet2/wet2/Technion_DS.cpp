@@ -99,9 +99,21 @@ void  Technion::JoinFaculties(int studyGroup1, int studyGroup2){
 
 	//if all is valid
 	//update max student
+	Faculty& faculty2 = facultySets.getSet(facultyNum2);
+	Faculty& faculty1 = facultySets.getSet(facultyNum1);
+	if (!faculty1.bestStudent){
+		faculty1.bestStudent=faculty2.bestStudent;
+	}
+	else if (!faculty2.bestStudent){
+		;//no need to update
+	}
+	else{
+		if (studentCompare(*faculty1.bestStudent, *faculty2.bestStudent) == -1){
+			faculty1.bestStudent = faculty2.bestStudent;
+		}
+	}
 
 	//check studygroup2's faculty as not valid;
-	Faculty& faculty2 = facultySets.getSet(facultyNum2);
 	faculty2.isFaculty = false;
 
 	//put in both roots the number of group1's faculty
