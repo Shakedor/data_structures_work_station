@@ -9,12 +9,17 @@ namespace dataStructures{
 	template<class data>
 	std::ostream& operator<<(std::ostream& os, smart_pointer<data>& sp);
 
+	//all exceptions
 	class dataSturctExceptions{};
+	//categories
 	class failureExceptions : public dataSturctExceptions {};
+	class invalidInputExceptions : public dataSturctExceptions{};
+	//invalid input exceptions
+	class badParameter : public invalidInputExceptions {};
+	//failure exceptions
 	class dataAlreadyExists : public failureExceptions {};
 	class dataDoesNotExist : public failureExceptions {};
 	class stucountertIsEmpty : public failureExceptions {};
-	class badParameter : public failureExceptions {};
 	class sizeOverFlow : public failureExceptions {};
 	class sturctIsEmpty : public dataDoesNotExist{};
 	class dataAlreadyAssigned : public failureExceptions {};
@@ -107,6 +112,37 @@ namespace dataStructures{
 
 	};
 
+
+	template<class key, class data>
+	class treeSaver{
+	public:
+		int size;
+		int counter;
+		data** dataArr;
+		key** keyArr;
+
+
+		treeSaver(int len) :size(len), counter(0){
+			dataArr = new data*[size];
+			keyArr = new key*[size];
+		}
+		void operator() (key& newKey, data& newdata){
+			assert(&newKey && &newdata);
+			if (counter >= size){
+				throw dataStructures::sizeOverFlow();
+			}
+			else{
+				dataArr[counter] = &newdata;
+				keyArr[counter] = &newKey;
+			}
+			counter++;
+		}
+		~treeSaver(){
+			delete[] dataArr;
+			delete[] keyArr;
+		}
+
+	};
 
 	template<class data>
 	class spPrint{

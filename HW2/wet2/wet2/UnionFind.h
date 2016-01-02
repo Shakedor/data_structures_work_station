@@ -33,10 +33,15 @@ public:
 	UnionFind() :n(NULL){};
 	UnionFind(int size);
 	~UnionFind();
+	// get the ith member in the member array
 	member& getMember(int i);
+	// find the num of the root node of the tree that memNum belongs to
 	int findNum(int memNum);
+	// get the ith set in the set array.
 	set& getSet(int i);
+	//get the set that member memNum belongs to
 	set& find(int memNum);
+	//union the set of mem1 and mem2
 	set& unionize(int mem1, int mem2);
 	
 

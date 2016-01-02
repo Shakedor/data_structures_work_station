@@ -12,10 +12,11 @@
 #include "student_and_faculty.h"
 
 class Technion{
-	int bucket[101];
-	AvlTree<int, Student, idCompare> studentTree;
-	hashTable<int, Student, idCompare, studentHasher> studentHash;
-	UnionFind<Faculty, studyGroup> facultySets;
+	int n;
+	int* bucket;
+	AvlTree<int, smart_pointer<Student>, idCompare> studentTree;
+	hashTable<int, smart_pointer<Student>, idCompare, studentHasher> studentHash;
+	UnionFind<Faculty, StudyGroup> facultySets;
 
 	int getCorrectSet(int studyGroup);
 public:
