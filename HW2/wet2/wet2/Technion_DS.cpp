@@ -172,7 +172,7 @@ void  Technion::UpgradeStudyGroup(int studyGroup, int factor){
 
 	//if all is good
 	// create a student save functor that saves the shared pointer of every student 
-	treeSaver<int, smart_pointer<Student>> studentArr(studentTree.get_size());
+	treeSaver<int, smart_pointer<Student> > studentArr(studentTree.get_size());
 	studentTree.inorder(studentArr);
 
 	smart_pointer<Student> smartest=smart_pointer<Student>();

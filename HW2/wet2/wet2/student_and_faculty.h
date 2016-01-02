@@ -3,8 +3,12 @@
 
 #include "dataStructures.h"
 
+static const int UNINITIALIZED_STUDENT_ID = -1;
+static const int UNINITIALIZED_AVERAGE = -1;
 static const int UNINITIALIZED_STUDY_GROUP = -1;
+static const int UNINITIALIZED_FACULTY_NUMBER = -1;
 
+using namespace dataStructures;
 
 class Student{
 public:
@@ -12,7 +16,8 @@ public:
 	int average;
 	int studyGroup;
 
-	Student() : studyGroup(-1){}
+	Student() : studentID(UNINITIALIZED_STUDENT_ID), average(UNINITIALIZED_AVERAGE),
+				studyGroup(UNINITIALIZED_STUDY_GROUP){}
 };
 
 class Faculty{
@@ -20,27 +25,16 @@ public:
 	smart_pointer<Student> bestStudent;
 	bool isFaculty;
 
-	Faculty() : isFaculty(true), bestStudent(NULL){}
+	Faculty() : isFaculty(true){} // Argument-less constructor of smart pointer sets it to NULL
 };
 
 class StudyGroup{
 public:
 	int myFaculty;
-	StudyGroup() : myFaculty(-1){}
+	StudyGroup() : myFaculty(UNINITIALIZED_FACULTY_NUMBER){}
 };
-
 
 int studentCompare(Student stud1, Student stud2);
-
-
-class Student_Comparison{
-public:
-	int operator() (Student stud1, Student stud2){
-		studentCompare(stud1, stud2);
-	}
-};
-
-
 
 class idCompare{
 public:

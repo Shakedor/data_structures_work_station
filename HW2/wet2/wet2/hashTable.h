@@ -42,7 +42,7 @@ class hashTable{
 public:
 	int numberOfElements;
 
-	hashTable(hasherFunc& hasher, KeyCompare& cmp, int size); //O(size)
+	hashTable(const hasherFunc& hasher, const KeyCompare& cmp, int size); //O(size)
 	~hashTable(); //O(size)
 	
 	void insert(Key key, Data element);	// worst: O(size)		average: O(1)
@@ -55,8 +55,8 @@ public:
 ////////////////////////////////////////////////////////////////////////////////
 
 template<class Key, class Data, class KeyCompare, class hasherFunc>
-hashTable<Key, Data, KeyCompare, hasherFunc> :: hashTable(hasherFunc& hasher,
-		KeyCompare& cmp, int size) :	hasher(hasher), cmp(cmp), arr(NULL),
+hashTable<Key, Data, KeyCompare, hasherFunc> :: hashTable(const hasherFunc& hasher,
+		const KeyCompare& cmp, int size) :	hasher(hasher), cmp(cmp), arr(NULL),
 		arrSize(size), numberOfElements(0){
 	arr = new AvlTree<Key, Data, KeyCompare>*[arrSize];
 	for (int i=0 ; i<arrSize ; ++i){
