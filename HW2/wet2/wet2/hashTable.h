@@ -3,9 +3,9 @@
 
 #include <cstdlib>
 #include <cassert>
-#include "DataStructures.h"
+#include "dataStructures.h"
 #include <cmath>
-#include "rankAvl.h"
+#include "rankTree.h"
 
 using namespace dataStructures;
 
@@ -22,12 +22,10 @@ class hashTable{
 	KeyCompare cmp;
 	AvlTree<Key, Data, KeyCompare>** arr;
 	int arrSize;
-	int emptySpace;
 
 	void resizeIfNeeded();
 	void resize(int newArrSize);
 	void doInsert(Key key, Data element);
-
 
 	// Function object that inserts all elements of a single tree in "arr" to "newArr".
 	// (They will probably be inserted to different trees)
@@ -42,8 +40,9 @@ class hashTable{
 	};
 
 public:
+	int numberOfElements;
+
 	hashTable(hasherFunc& hasher, KeyCompare& cmp, int size); //O(size)
-	//hashTable(); TODO: I think it is not necessary
 	~hashTable(); //O(size)
 	
 	void insert(Key key, Data element);	// worst: O(size)		average: O(1)
@@ -58,7 +57,7 @@ public:
 template<class Key, class Data, class KeyCompare, class hasherFunc>
 hashTable<Key, Data, KeyCompare, hasherFunc> :: hashTable(hasherFunc& hasher,
 		KeyCompare& cmp, int size) :	hasher(hasher), cmp(cmp), arr(NULL),
-		arrSize(size), emptySpace(size){
+		arrSize(size), numberOfElements(0){
 	arr = new AvlTree<Key, Data, KeyCompare>*[arrSize];
 	for (int i=0 ; i<arrSize ; ++i){
 		arr[i] = NULL;
@@ -80,7 +79,6 @@ void hashTable<Key, Data, KeyCompare, hasherFunc> :: doInsert(Key key, Data data
 
 	if (!arr[index]){
 		arr[index] = new AvlTree<Key, Data, KeyCompare>(cmp);
-		--emptySpace;
 	}
 	arr[index]->insert(key, data); // May throw dataStructures::dataAlreadyExists()
 }
@@ -88,6 +86,7 @@ void hashTable<Key, Data, KeyCompare, hasherFunc> :: doInsert(Key key, Data data
 template<class Key,class Data, class KeyCompare, class hasherFunc>
 void hashTable<Key, Data, KeyCompare, hasherFunc> :: insert(Key key, Data data){
 	doInsert(key, data);
+	++numberOfElements; //Only done if insert succeeds
 	resizeIfNeeded();
 }
 
@@ -97,17 +96,17 @@ void hashTable<Key, Data, KeyCompare, hasherFunc> :: remove(Key key){
 	assert(index >= 0 && index < arrSize);
 
 	if (!arr[index]){
-		if (emptySpace == arrSize){
+		if (numberOfElements == 0){
 			throw dataStructures::sturctIsEmpty();
 		}
 		throw dataStructures::dataDoesNotExist();
 	}
 
-	arr[index]->remove(key);
+	arr[index]->remove(key); // May throw dataDoesNotExist
+	--numberOfElements; // Done only if remove succeeded
 	if (arr[index]->get_size() == 0){
 		delete(arr[index]);
 		arr[index] = NULL;
-		++emptySpace;
 	}
 	resizeIfNeeded();
 }
@@ -118,7 +117,7 @@ Data& hashTable<Key, Data, KeyCompare, hasherFunc> :: search(const Key& key){
 	assert(index >= 0 && index < arrSize);
 
 	if (!arr[index]){
-		if (emptySpace == arrSize){
+		if (numberOfElements == 0){
 			throw dataStructures::sturctIsEmpty();
 		}
 		throw dataStructures::dataDoesNotExist();
@@ -141,7 +140,7 @@ void hashTable<Key, Data, KeyCompare, hasherFunc> :: resize(int newArrSize){
 		arr[i] = NULL;
 	}
 	arrSize = newArrSize;
-	emptySpace = newArrSize;
+	// numberOfElements is not changed
 
 	// Create the insertion function object
 	InsertToHash insertToHash(*this);
@@ -162,11 +161,11 @@ void hashTable<Key, Data, KeyCompare, hasherFunc> :: resize(int newArrSize){
 
 template<class Key,class Data, class KeyCompare, class hasherFunc>
 void hashTable<Key, Data, KeyCompare, hasherFunc> :: resizeIfNeeded(){
-	if (emptySpace == 0){ // arr is full
+	if (numberOfElements == arrSize){ // arr is full
 		resize(2*arrSize);
 	} else {
-		if (4*emptySpace ==  3*arrSize){ // arr is 3/4 empty
-			resize(0.5*arrSize);
+		if (numberOfElements <=  arrSize/4){ // only 1/4 (or less) is taken
+			resize( (0.5*arrSize < 1) ? 1 : 0.5*arrSize);
 		}
 	}
 }
