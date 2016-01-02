@@ -18,7 +18,7 @@
 		} catch (dataStructures::dataAlreadyExists&){ \
 			; \
 		}catch (...) { \
-			ASSERT_TEST (false); \
+			ASSERT_TEST(false); \
 		} \
 } while (0)
 
@@ -28,7 +28,7 @@
 		} catch (dataStructures::dataDoesNotExist&){ \
 			; \
 		}catch (...) { \
-			ASSERT_TEST (false); \
+			ASSERT_TEST(false); \
 		} \
 } while (0)
 
@@ -38,17 +38,16 @@
 		} catch (dataStructures::sturctIsEmpty&){ \
 			; \
 		}catch (...) { \
-			ASSERT_TEST (false); \
+			ASSERT_TEST(false); \
 		} \
 } while (0)
 
 #define ASSERT_EXCEPTION_THROWN(command, exception) do {	\
 		try {	\
 			command;	\
-		} catch (exception&){ \
+			ASSERT_TEST(false); \
+		} catch (exception& e){ \
 			; \
-		}catch (...) { \
-			ASSERT_TEST (false); \
 		} \
 } while (0)
 
@@ -56,7 +55,7 @@
 		try {	\
 			command;	\
 		}catch (...) { \
-			ASSERT_TEST (false); \
+			ASSERT_TEST(false); \
 		} \
 } while (0)
 
@@ -436,12 +435,12 @@ static bool testTechnionUpgradeStudyGroup(){
 	ASSERT_TEST(smartestID == 4);
 
 	// upgradeStudyGroup 1 and check correct max (60,80)
-	ASSERT_EXCEPTION_THROWN(technion.UpgradeStudyGroup(2, 2), badParameter);
+	ASSERT_NO_EXCEPTION_THROWN(technion.UpgradeStudyGroup(2, 2));
 	ASSERT_NO_EXCEPTION_THROWN(technion.GetSmartestStudent(2, &smartestID));
 	ASSERT_TEST(smartestID == 4);
 
 	// upgradeStudyGroup 1 and check correct max (100,100)
-	ASSERT_EXCEPTION_THROWN(technion.UpgradeStudyGroup(2, 2), badParameter);
+	ASSERT_NO_EXCEPTION_THROWN(technion.UpgradeStudyGroup(2, 2));
 	ASSERT_NO_EXCEPTION_THROWN(technion.GetSmartestStudent(2, &smartestID));
 	ASSERT_TEST(smartestID == 3);
 
@@ -449,22 +448,22 @@ static bool testTechnionUpgradeStudyGroup(){
 	ASSERT_NO_EXCEPTION_THROWN(technion.JoinFaculties(1, 2));
 
 	// upgradeStudyGroup 1 and check correct max (0,20,40)  (100,100)
-	ASSERT_EXCEPTION_THROWN(technion.UpgradeStudyGroup(1, 2), badParameter);
+	ASSERT_NO_EXCEPTION_THROWN(technion.UpgradeStudyGroup(1, 2));
 	ASSERT_NO_EXCEPTION_THROWN(technion.GetSmartestStudent(1, &smartestID));
 	ASSERT_TEST(smartestID == 3);
 
 	// upgradeStudyGroup 1 and check correct max (0,40,80)  (100,100)
-	ASSERT_EXCEPTION_THROWN(technion.UpgradeStudyGroup(1, 2), badParameter);
+	ASSERT_NO_EXCEPTION_THROWN(technion.UpgradeStudyGroup(1, 2));
 	ASSERT_NO_EXCEPTION_THROWN(technion.GetSmartestStudent(1, &smartestID));
 	ASSERT_TEST(smartestID == 3);
 
 	// upgradeStudyGroup 1 and check correct max (0,80,100)  (100,100)
-	ASSERT_EXCEPTION_THROWN(technion.UpgradeStudyGroup(1, 2), badParameter);
+	ASSERT_NO_EXCEPTION_THROWN(technion.UpgradeStudyGroup(1, 2));
 	ASSERT_NO_EXCEPTION_THROWN(technion.GetSmartestStudent(1, &smartestID));
 	ASSERT_TEST(smartestID == 2);
 
 	// upgradeStudyGroup 1 and check correct max (0,100,100)  (100,100)
-	ASSERT_EXCEPTION_THROWN(technion.UpgradeStudyGroup(1, 2), badParameter);
+	ASSERT_NO_EXCEPTION_THROWN(technion.UpgradeStudyGroup(1, 2));
 	ASSERT_NO_EXCEPTION_THROWN(technion.GetSmartestStudent(1, &smartestID));
 	ASSERT_TEST(smartestID == 1);
 
@@ -535,7 +534,7 @@ static bool testTechnionGetNumOfStudentsInRange(){
 	ASSERT_EXCEPTION_THROWN(technion.GetNumOfStudentsInRange(11, 101, &studentsInRange), badParameter);
 
 	// Empty Technion
-	ASSERT_EXCEPTION_THROWN(technion.GetNumOfStudentsInRange(0, 100, &studentsInRange), badParameter);
+	ASSERT_NO_EXCEPTION_THROWN(technion.GetNumOfStudentsInRange(0, 100, &studentsInRange));
 	ASSERT_TEST(studentsInRange == 0);
 
 	// Add even studentsID 0, to Technion
@@ -543,12 +542,13 @@ static bool testTechnionGetNumOfStudentsInRange(){
 		technion.AddStudent(id, 10*id);
 
 		//Num of students
-		ASSERT_EXCEPTION_THROWN(technion.GetNumOfStudentsInRange(0, 100, &studentsInRange), badParameter);
+		ASSERT_NO_EXCEPTION_THROWN(technion.GetNumOfStudentsInRange(0, 100, &studentsInRange));
 		ASSERT_TEST(studentsInRange == id+1);
 	}
 
-	for (int id=0; id<NUMBER_OF_STUDENTS ; ++id){
-		ASSERT_EXCEPTION_THROWN(technion.GetNumOfStudentsInRange(0, 10*id, &studentsInRange), badParameter);
+	ASSERT_EXCEPTION_THROWN(technion.GetNumOfStudentsInRange(0, 10*0, &studentsInRange), badParameter);
+	for (int id=1; id<NUMBER_OF_STUDENTS ; ++id){
+		ASSERT_NO_EXCEPTION_THROWN(technion.GetNumOfStudentsInRange(0, 10*id, &studentsInRange));
 		ASSERT_TEST(studentsInRange == id+1);
 	}
 
@@ -557,7 +557,7 @@ static bool testTechnionGetNumOfStudentsInRange(){
 		technion.AssignStudent(id, id);
 	}
 
-	ASSERT_EXCEPTION_THROWN(technion.GetNumOfStudentsInRange(0, 100, &studentsInRange), badParameter);
+	ASSERT_NO_EXCEPTION_THROWN(technion.GetNumOfStudentsInRange(0, 100, &studentsInRange));
 	ASSERT_TEST(studentsInRange == NUMBER_OF_STUDENTS);
 
 	// studentID 1 avg=20
