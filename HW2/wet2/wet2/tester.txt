@@ -1,0 +1,47 @@
+#!/bin/bash
+count=0
+
+# $1 = test number
+# $2 = number of tests
+function runTest {
+	echo -n test $1: 
+	for((i = 1; i <= $2; i++)); do
+			valgrind --leak-check=full ./a.out < test${i}.in > tmpout 
+			#res=(`diff test${i}.out tmpout | wc -l`)
+
+			#if(( res == 0 )); then
+			#	echo Success;
+			#else
+			#	echo Failed
+			#	let count++
+			#fi
+	done
+
+	if(( count == 0 )); then
+		echo test $1 passed
+	else
+		echo test $1 failed
+	fi
+}
+
+cd ./tests1
+runTest 1 10
+cd ..
+printf "\n\n\n\n\n\n\n\n\n\n\n"
+
+cd ./tests2
+runTest 2 3
+cd ..
+printf "\n\n\n\n\n\n\n\n\n\n\n"
+
+cd ./tests3
+runTest 3 10
+cd ..
+printf "\n\n\n\n\n\n\n\n\n\n\n"
+
+cd ./tests4
+runTest 4 10
+cd ..
+printf "\n\n\n\n\n\n\n\n\n\n\n"
+
+

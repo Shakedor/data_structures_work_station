@@ -3,7 +3,7 @@
 using namespace dataStructures;
 
 Technion::Technion(int n) : n(n),bucket(NULL), studentTree(idCompare()), 
-	studentHash(studentHasher(), idCompare(), studentHasher().startingModulu),
+	studentHash(studentHasher(), idCompare(), studentHasher::startingModulu),
 	facultySets(n){
 	//initialize bucket to zero
 	bucket = new int[101];
@@ -276,7 +276,7 @@ void  Technion::GetNumOfStudentsInRange(int fromAvg, int toAvg, int* num){
 	//if all is valid
 	//sum the counts of bucket[from] to bucket[to] including
 	int sum = 0;
-	for (int i = fromAvg; i < toAvg + 1; i++){
+	for (int i = fromAvg + 1; i < toAvg + 1 ; i++){
 		sum += bucket[i];
 	}
 
