@@ -1,6 +1,6 @@
 
 #include "library2.h"
-#include "Technion_DS.h"
+#include "technion_DS.h"
 #include "dataStructures.h"
 #include <cassert>
 
